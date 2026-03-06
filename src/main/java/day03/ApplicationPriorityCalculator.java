@@ -26,11 +26,13 @@ public class ApplicationPriorityCalculator {
 
     public int overallPriority(String source, boolean isStrongCandidate) {
         int basePriority = priorityFromSource(source);
+        return adjustedForCandidateStrength(basePriority , isStrongCandidate);
+    }
 
-        if (isStrongCandidate && basePriority < 3) {
+    private int adjustedForCandidateStrength(int basePriority , boolean isStrongCandidate){
+        if (isStrongCandidate && basePriority < 3){
             return basePriority + 1;
         }
-
         return basePriority;
     }
 
