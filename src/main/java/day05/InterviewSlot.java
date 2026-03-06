@@ -17,25 +17,9 @@ public final class InterviewSlot {
                          LocalTime endTime,
                          boolean remote) {
 
-        if (date == null) {
-            throw new IllegalArgumentException("date must not be null");
-        }
-        if (startTime == null || endTime == null) {
-            throw new IllegalArgumentException("startTime and endTime must not be null");
-        }
-        if (date.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("date must be today or in the future");
-        }
-        if (!startTime.isBefore(endTime)) {
-            throw new IllegalArgumentException("startTime must be before endTime");
-        }
-
-        // Optional business hours check (8:00–20:00)
-        LocalTime earliest = LocalTime.of(8, 0);
-        LocalTime latest = LocalTime.of(20, 0);
-        if (startTime.isBefore(earliest) || endTime.isAfter(latest)) {
-            throw new IllegalArgumentException("slot must be within business hours 08:00–20:00");
-        }
+        validateDate(date);
+        validateTimes(startTime, endTime);
+        validateBusinessHours(startTime, endTime);
 
         this.date = date;
         this.startTime = startTime;
@@ -64,11 +48,12 @@ public final class InterviewSlot {
     }
 
     public boolean overlaps(InterviewSlot other) {
+        if (other == null) {
+            return false;
+        }
         if (!this.date.equals(other.date)) {
             return false;
         }
-        // Time intervals [start, end) overlap if:
-        // start1 < end2 AND start2 < end1
         return this.startTime.isBefore(other.endTime)
                 && other.startTime.isBefore(this.endTime);
     }
@@ -97,5 +82,31 @@ public final class InterviewSlot {
                 ", endTime=" + endTime +
                 ", remote=" + remote +
                 '}';
+    }
+
+    private static void validateDate(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException("date must not be null");
+        }
+        if (date.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("date must be today or in the future");
+        }
+    }
+
+    private static void validateTimes(LocalTime startTime, LocalTime endTime) {
+        if (startTime == null || endTime == null) {
+            throw new IllegalArgumentException("startTime and endTime must not be null");
+        }
+        if (!startTime.isBefore(endTime)) {
+            throw new IllegalArgumentException("startTime must be before endTime");
+        }
+    }
+
+    private static void validateBusinessHours(LocalTime startTime, LocalTime endTime) {
+        LocalTime earliest = LocalTime.of(8, 0);
+        LocalTime latest = LocalTime.of(20, 0);
+        if (startTime.isBefore(earliest) || endTime.isAfter(latest)) {
+            throw new IllegalArgumentException("slot must be within business hours 08:00–20:00");
+        }
     }
 }

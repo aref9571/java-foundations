@@ -8,10 +8,7 @@ public final class Money {
     private final String currency;
 
     public Money(long amountInCents, String currency) {
-        if (currency == null || currency.isBlank()) {
-            throw new IllegalArgumentException("currency must be non-blank");
-        }
-        // Decide rule: here we allow negative (refunds)
+        validateCurrency(currency);
         this.amountInCents = amountInCents;
         this.currency = currency;
     }
@@ -25,15 +22,29 @@ public final class Money {
     }
 
     public Money add(Money other) {
+        requireNonNull(other);
         requireSameCurrency(other);
         long resultAmount = this.amountInCents + other.amountInCents;
         return new Money(resultAmount, this.currency);
     }
 
     public Money subtract(Money other) {
+        requireNonNull(other);
         requireSameCurrency(other);
         long resultAmount = this.amountInCents - other.amountInCents;
         return new Money(resultAmount, this.currency);
+    }
+
+    private static void validateCurrency(String currency) {
+        if (currency == null || currency.isBlank()) {
+            throw new IllegalArgumentException("currency must be non-blank");
+        }
+    }
+
+    private static void requireNonNull(Money other) {
+        if (other == null) {
+            throw new IllegalArgumentException("other money must not be null");
+        }
     }
 
     private void requireSameCurrency(Money other) {

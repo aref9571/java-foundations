@@ -17,21 +17,7 @@ public final class JobApplication {
                           LocalDate appliedDate,
                           Money expectedSalary) {
 
-        if (company == null || company.isBlank()) {
-            throw new IllegalArgumentException("company must be non-blank");
-        }
-        if (role == null || role.isBlank()) {
-            throw new IllegalArgumentException("role must be non-blank");
-        }
-        if (status == null) {
-            throw new IllegalArgumentException("status must not be null");
-        }
-        if (appliedDate == null) {
-            throw new IllegalArgumentException("appliedDate must not be null");
-        }
-        if (appliedDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("appliedDate must not be in the future");
-        }
+        validateRequiredFields(company, role, status, appliedDate);
 
         this.company = company;
         this.role = role;
@@ -108,5 +94,26 @@ public final class JobApplication {
                 ", appliedDate=" + appliedDate +
                 ", expectedSalary=" + expectedSalary +
                 '}';
+    }
+
+    private static void validateRequiredFields(String company,
+                                               String role,
+                                               ApplicationStatus status,
+                                               LocalDate appliedDate) {
+        if (company == null || company.isBlank()) {
+            throw new IllegalArgumentException("company must be non-blank");
+        }
+        if (role == null || role.isBlank()) {
+            throw new IllegalArgumentException("role must be non-blank");
+        }
+        if (status == null) {
+            throw new IllegalArgumentException("status must not be null");
+        }
+        if (appliedDate == null) {
+            throw new IllegalArgumentException("appliedDate must not be null");
+        }
+        if (appliedDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("appliedDate must not be in the future");
+        }
     }
 }
