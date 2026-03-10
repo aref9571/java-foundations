@@ -2,6 +2,7 @@ package day05;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 public final class JobApplication {
 
@@ -10,24 +11,30 @@ public final class JobApplication {
     private final ApplicationStatus status;
     private final LocalDate appliedDate;
     private final Money expectedSalary;
+    private final UUID id;
 
     public JobApplication(String company,
                           String role,
                           ApplicationStatus status,
                           LocalDate appliedDate,
-                          Money expectedSalary) {
+                          Money expectedSalary,
+                          UUID id) {
 
-        validateRequiredFields(company, role, status, appliedDate);
-
+        validateRequiredFields(company, role, status, appliedDate, expectedSalary);
         this.company = company;
         this.role = role;
         this.status = status;
         this.appliedDate = appliedDate;
         this.expectedSalary = expectedSalary;
+        this.id = Objects.requireNonNull(id, "id must not be null");
     }
 
     public String company() {
         return company;
+    }
+
+    public UUID id() {
+        return id;
     }
 
     public String role() {
@@ -60,7 +67,8 @@ public final class JobApplication {
                 this.role,
                 newStatus,
                 this.appliedDate,
-                this.expectedSalary
+                this.expectedSalary,
+                this.id
         );
     }
 
@@ -77,12 +85,13 @@ public final class JobApplication {
                 && role.equals(that.role)
                 && status == that.status
                 && appliedDate.equals(that.appliedDate)
-                && Objects.equals(expectedSalary, that.expectedSalary);
+                && Objects.equals(expectedSalary, that.expectedSalary)
+                && id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(company, role, status, appliedDate, expectedSalary);
+        return Objects.hash(company, role, status, appliedDate, expectedSalary, id);
     }
 
     @Override
@@ -99,7 +108,8 @@ public final class JobApplication {
     private static void validateRequiredFields(String company,
                                                String role,
                                                ApplicationStatus status,
-                                               LocalDate appliedDate) {
+                                               LocalDate appliedDate,
+                                               Money expectedSalary) {
         if (company == null || company.isBlank()) {
             throw new IllegalArgumentException("company must be non-blank");
         }
@@ -114,6 +124,9 @@ public final class JobApplication {
         }
         if (appliedDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("appliedDate must not be in the future");
+        }
+        if (expectedSalary == null) {
+            throw new IllegalArgumentException("expectedSalary must not be null");
         }
     }
 }
