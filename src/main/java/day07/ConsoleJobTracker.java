@@ -65,11 +65,11 @@ public class ConsoleJobTracker {
 
     private static void findByCompanyFlow() {
         String companyName = stringValidation("Enter the company name: ", "company");
-        Optional<JobApplication> application = SERVICE.findByCompany(companyName);
+        List<JobApplication> application = SERVICE.findByCompany(companyName);
         if (application.isEmpty()) {
             System.out.println("No application was found for company: " + companyName);
         } else {
-            JobApplication found = application.get();
+            JobApplication found = application.getFirst();
             List<JobApplication> singleResult = List.of(found);
             printApplications(singleResult);
         }

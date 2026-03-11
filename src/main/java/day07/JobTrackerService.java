@@ -7,7 +7,6 @@ import day05.Money;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class JobTrackerService {
@@ -60,10 +59,10 @@ public class JobTrackerService {
                 .toList();
     }
 
-    public Optional<JobApplication> findByCompany(String company) {
+    public List<JobApplication> findByCompany(String company) {
         return applications.stream()
                 .filter(app -> app.company().equalsIgnoreCase(company))
-                .findFirst();
+                .toList();
     }
 
     public void clear() {
