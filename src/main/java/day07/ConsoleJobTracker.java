@@ -103,7 +103,6 @@ public class ConsoleJobTracker {
         SERVICE.addApplication(company, role, status, appliedDate, expectedSalary);
         System.out.println("The application added successfully.");
     }
-
     private static void printMenu() {
         System.out.println("===== Console Job Tracker =====");
         System.out.println("1 - Add application");
@@ -114,7 +113,6 @@ public class ConsoleJobTracker {
         System.out.println("0 - Exit");
         System.out.print("Choose an option: ");
     }
-
     private static int validateAppNumber(List<JobApplication> applications) {
         while (true) {
             System.out.println("Enter the application number: ");
@@ -132,7 +130,6 @@ public class ConsoleJobTracker {
             }
         }
     }
-
     private static void printApplications(List<JobApplication> applications) {
         int count = 1;
         for (JobApplication app : applications) {
@@ -147,7 +144,6 @@ public class ConsoleJobTracker {
             count++;
         }
     }
-
     private static ApplicationStatus validateStatus() {
         ApplicationStatus status = null;
         while (status == null) {
@@ -161,7 +157,6 @@ public class ConsoleJobTracker {
         }
         return status;
     }
-
     private static LocalDate validateAppliedDate() {
         LocalDate appliedDate = null;
         while (appliedDate == null) {
@@ -175,13 +170,11 @@ public class ConsoleJobTracker {
         }
         return appliedDate;
     }
-
     private static Money validateExpectedSalary() {
         long amount = amountValidation();
         String currency = stringValidation("Enter the currency of expected salary:  ", "currency");
         return new Money(amount, currency);
     }
-
     private static long amountValidation() {
         while (true) {
             System.out.println("Enter the amount of the expected salary: ");
@@ -198,7 +191,6 @@ public class ConsoleJobTracker {
             }
         }
     }
-
     private static String stringValidation(String prompt, String filedName) {
         String st = null;
         while (st == null) {
