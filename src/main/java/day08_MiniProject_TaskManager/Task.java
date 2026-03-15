@@ -13,12 +13,7 @@ public record Task(
 ) {
 
     public Task {
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException("Title must be non-blank.");
-        }
-        if (description == null || description.isBlank()) {
-            throw new IllegalArgumentException("Description must be non-blank.");
-        }
+        validateTitleDescription(title , description);
         Objects.requireNonNull(dueDate, "dueDate must not be null");
         Objects.requireNonNull(status, "status must not be null");
         Objects.requireNonNull(id, "id must not be null");
@@ -33,5 +28,13 @@ public record Task(
 
     public boolean isActive() {
         return status == TaskStatus.IN_PROGRESS;
+    }
+    private static void validateTitleDescription(String title , String description){
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Title must be non-blank.");
+        }
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Description must be non-blank.");
+        }
     }
 }
