@@ -3,20 +3,15 @@ package day09;
 import java.util.*;
 
 public class ApplicationTags {
-    private final Map<String , Set<String>> tagsByCompany = new HashMap<>();
+    private final Map<String , Set<String> > tagsByCompany = new HashMap<>();
     public void addTags(String company , String tag){
-        if (company == null || company.isBlank()){
-            throw new IllegalArgumentException("Company must not be blank");
-        }
-        if (tag == null || tag.isBlank()){
-            throw new IllegalArgumentException("Tag must not be blank");
-        }
-        String normalizeTage = tag.toLowerCase();
-        tagsByCompany.computeIfAbsent(company , c -> new  HashSet<>()).add(normalizeTage);
-    }
+        addTagValidation(company,tag);
+        String normalizedTag = tag.toLowerCase();
+        tagsByCompany.computeIfAbsent(company, c -> new HashSet<>()).add(normalizedTag);
 
+    }
     public Set<String> getTags(String company){
-        Set<String> tags = tagsByCompany.getOrDefault(company, Collections.emptySet());
+        Set<String> tags = tagsByCompany.getOrDefault(company , Collections.emptySet());
         return Collections.unmodifiableSet(tags);
     }
 
@@ -24,11 +19,29 @@ public class ApplicationTags {
         if (tag == null){
             return false;
         }
-        String normalized = tag.toLowerCase();
-        return getTags(company).contains(normalized);
+        String normalizedTag = tag.toLowerCase();
+        return getTags(company).contains(normalizedTag);
     }
 
-    public Map<String , Set<String>> viewAll(){
+    public Map<String  , Set<String>> viewAll(){
         return new HashMap<>(tagsByCompany);
+    }
+
+
+
+
+
+
+
+
+
+
+    private static void addTagValidation(String company , String tags){
+        if (company == null || company.isBlank()){
+            throw new IllegalArgumentException("Company must not be blank");
+        }
+        if (tags == null || tags.isBlank()){
+            throw new IllegalArgumentException("Tag must not be blank");
+        }
     }
 }
