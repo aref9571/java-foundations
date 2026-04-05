@@ -9,7 +9,7 @@ public class ApplicationRepository {
     private final Map<String , List<JobApplication>> byCompany = new HashMap<>();
     private final Map<ApplicationStatus , List<JobApplication>> byStatus = new EnumMap<>(ApplicationStatus.class);
 
-    private ApplicationRepository(){
+    public ApplicationRepository(){
         for (ApplicationStatus status : ApplicationStatus.values()){
             byStatus.put(status , new ArrayList<>());
         }
