@@ -12,6 +12,7 @@ Learning core Java for backend and cloud engineering.
 - Day 6 – Refactoring + structure: cleaned up packages, extracted validation and helper methods, reduced duplication in rules, domain objects, and array utilities.
 - Day 8 – Implemented ApplicationTags and ApplicationIndex; practiced List/Set/Map design, computeIfAbsent, unmodifiable collections, defensive copies, and null-safe collection returns.
 For more detailed notes per day, see docs/ (planned).
+- Day 9 - in-memory repository and query utilities for JobApplication
 
 ## How to run tests
 
