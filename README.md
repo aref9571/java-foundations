@@ -10,7 +10,7 @@ Learning core Java for backend and cloud engineering.
 - Day 4 – Arrays + basic algorithms: ArrayStats (min/max/sum/average) and ArrayUtils (copy/reverse/search/safeGet) with JUnit tests.
 - Day 5 – Domain modeling + immutability: Money value object, JobApplication and InterviewSlot entities with validation and JUnit tests.
 - Day 6 – Refactoring + structure: cleaned up packages, extracted validation and helper methods, reduced duplication in rules, domain objects, and array utilities.
-
+- Day 8 – Implemented ApplicationTags and ApplicationIndex; practiced List/Set/Map design, computeIfAbsent, unmodifiable collections, defensive copies, and null-safe collection returns.
 For more detailed notes per day, see docs/ (planned).
 
 ## How to run tests
