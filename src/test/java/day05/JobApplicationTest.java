@@ -1,5 +1,6 @@
 package day05;
 
+import day11.InvalidApplicationStateException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -33,7 +34,6 @@ class JobApplicationTest {
     @Test
     void blankCompanyThrows() {
         UUID id = UUID.randomUUID();
-        // FIX: use non-null Money to respect expectedSalary invariant
         Money expectedSalary = new Money(5_000_00L, "EUR");
         assertThrows(IllegalArgumentException.class, () ->
                 new JobApplication(
@@ -49,7 +49,6 @@ class JobApplicationTest {
     @Test
     void blankRoleThrows() {
         UUID id = UUID.randomUUID();
-        // FIX: use non-null Money to respect expectedSalary invariant
         Money expectedSalary = new Money(5_000_00L, "EUR");
         assertThrows(IllegalArgumentException.class, () ->
                 new JobApplication(
@@ -66,7 +65,6 @@ class JobApplicationTest {
     void futureAppliedDateThrows() {
         LocalDate future = LocalDate.now().plusDays(1);
         UUID id = UUID.randomUUID();
-        // FIX: use non-null Money to respect expectedSalary invariant
         Money expectedSalary = new Money(5_000_00L, "EUR");
         assertThrows(IllegalArgumentException.class, () ->
                 new JobApplication(
@@ -83,7 +81,6 @@ class JobApplicationTest {
     void isActiveTrueForAppliedAndInterviewing() {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
-        // FIX: use non-null Money to respect expectedSalary invariant
         Money expectedSalary = new Money(5_000_00L, "EUR");
 
         JobApplication applied = new JobApplication(
@@ -110,7 +107,6 @@ class JobApplicationTest {
     @Test
     void isActiveFalseForOfferAndRejected() {
         UUID id = UUID.randomUUID();
-        // FIX: use non-null Money to respect expectedSalary invariant
         Money expectedSalary = new Money(5_000_00L, "EUR");
 
         JobApplication offer = new JobApplication(
@@ -137,7 +133,6 @@ class JobApplicationTest {
     @Test
     void withStatusReturnsNewInstanceWithUpdatedStatus() {
         UUID id = UUID.randomUUID();
-        // FIX: use non-null Money to respect expectedSalary invariant
         Money expectedSalary = new Money(5_000_00L, "EUR");
 
         JobApplication original = new JobApplication(
@@ -155,4 +150,46 @@ class JobApplicationTest {
         assertEquals(ApplicationStatus.APPLIED, original.status());
         assertNotSame(original, updated);
     }
+    @Test
+    void appliedToOffer_shouldThrowInvalidApplicationStateException() {
+        UUID id = UUID.randomUUID();
+        Money expectedSalary = new Money(5_000_00L, "EUR");
+
+        JobApplication original = new JobApplication(
+                "ACME Corp",
+                "Backend Engineer",
+                ApplicationStatus.APPLIED,
+                LocalDate.now().minusDays(1),
+                expectedSalary,
+                id
+        );
+        InvalidApplicationStateException ex = assertThrows(
+                InvalidApplicationStateException.class,
+                () -> original.withStatus(ApplicationStatus.OFFER)
+        );
+        assertTrue(ex.getMessage().contains("APPLIED"));
+        assertTrue(ex.getMessage().contains("OFFER"));
+    }
+    @Test
+    void rejectedToApplied_shouldThrowInvalidApplicationStateException() {
+        UUID id = UUID.randomUUID();
+        Money expectedSalary = new Money(5_000_00L, "EUR");
+
+        JobApplication original = new JobApplication(
+                "ACME Corp",
+                "Backend Engineer",
+                ApplicationStatus.REJECTED,
+                LocalDate.now().minusDays(1),
+                expectedSalary,
+                id
+        );
+        InvalidApplicationStateException ex = assertThrows(
+                InvalidApplicationStateException.class,
+                () -> original.withStatus(ApplicationStatus.APPLIED)
+        );
+        assertTrue(ex.getMessage().contains("final state"));
+        assertTrue(ex.getMessage().contains("REJECTED"));
+    }
+
+
 }

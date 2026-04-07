@@ -1,5 +1,7 @@
 package day05;
 
+import day11.InvalidApplicationStateException;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -60,16 +62,15 @@ public final class JobApplication {
 
     public JobApplication withStatus(ApplicationStatus newStatus) {
         if (newStatus == null) {
-            throw new IllegalArgumentException("newStatus must not be null");
+            throw new InvalidApplicationStateException("newStatus must not be null");
         }
-        return new JobApplication(
-                this.company,
-                this.role,
-                newStatus,
-                this.appliedDate,
-                this.expectedSalary,
-                this.id
-        );
+        if (this.status == ApplicationStatus.OFFER || this.status == ApplicationStatus.REJECTED){
+            throw new InvalidApplicationStateException("Cannot change status: application is already in final state " + this.status);
+        }
+        if (this.status == ApplicationStatus.APPLIED && newStatus == ApplicationStatus.OFFER){
+            throw new InvalidApplicationStateException("Cannot move directly from APPLIED to OFFER - must go through INTERVIEWING");
+        }
+        return new JobApplication(company , role , newStatus , appliedDate , expectedSalary , id);
     }
 
     @Override
