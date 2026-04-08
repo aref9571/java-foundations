@@ -2,6 +2,9 @@ package day10;
 
 import day05.ApplicationStatus;
 import day05.JobApplication;
+import day11.ApplicationNotFoundException;
+import day11.DuplicateApplicationException;
+
 import java.util.*;
 
 public class ApplicationRepository {
@@ -18,6 +21,12 @@ public class ApplicationRepository {
         if (app == null){
             throw new IllegalArgumentException("JobApplication must not be null");
         }
+
+        boolean alreadyExist = applications.stream().anyMatch(existing -> existing.company().equalsIgnoreCase(app.company()) && existing.role().equalsIgnoreCase(app.role()));
+        if (alreadyExist){
+            throw new DuplicateApplicationException("Application for " + app.role() + " at " + app.company() + " already exists");
+        }
+
         applications.add(app);
         byStatus.get(app.status()).add(app);
         byCompany.computeIfAbsent(app.company() , c -> new ArrayList<>()).add(app);
@@ -47,6 +56,35 @@ public class ApplicationRepository {
     }
     public long countActive(){
         return applications.stream().filter(JobApplication::isActive).count();
+    }
+
+    public JobApplication findByIdOrThrow(UUID id){
+        if (id == null){
+            throw new IllegalArgumentException("id must not be null");
+        }
+        return applications.stream().filter(app -> app.id().equals(id)).findFirst().orElseThrow(() -> new ApplicationNotFoundException("No application found with id: " + id));
+    }
+    public JobApplication updateStatus(UUID id , ApplicationStatus newStatus){
+        if (id == null){
+            throw new IllegalArgumentException("id must not be null");
+        }
+        if (newStatus == null){
+            throw new IllegalArgumentException("newStatus must not be null");
+        }
+
+        JobApplication existing = findByIdOrThrow(id);
+        JobApplication updated = existing.withStatus(newStatus);
+
+        int index = applications.indexOf(existing);
+        applications.set(index , updated);
+
+        byStatus.get(existing.status()).remove(existing);
+        byStatus.get(updated.status()).add(updated);
+
+        List<JobApplication> companyList = byCompany.get(existing.company());
+        int companyIndex = companyList.indexOf(existing);
+        companyList.set(companyIndex , updated);
+        return updated;
     }
 
 }
