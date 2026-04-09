@@ -14,6 +14,7 @@ Learning core Java for backend and cloud engineering.
 For more detailed notes per day, see docs/ (planned).
 - Day 9 - in-memory repository and query utilities for JobApplication.
 - Day 10 – Custom domain exceptions, JobApplication state transitions (immutable withStatus), and repository fail-fast error handling (findByIdOrThrow, duplicate checks, status updates) with focused tests on exception paths.
+- Day 11 - Generics and reusable infrastructure: Implemented generic containers (Box, Pair), collection utilities, and an in-memory generic store to practice type-safe reusable code.
 
 ## How to run tests
 
