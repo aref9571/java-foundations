@@ -64,8 +64,6 @@ class ApplicationRepositoryTest {
     }
     @Test
     void countActive_returnsNumberOfActiveApplications(){
-        Money salary = new Money(1000L , "EUR");
-        LocalDate date = LocalDate.of(2026 , 4 , 5);
         JobApplication app1 = JobApplicationBuilder.aDefaultApplication().build();
         JobApplication app2 = JobApplicationBuilder.aDefaultApplication().withCompany("Amazon").withRole("NA").withStatus(ApplicationStatus.INTERVIEWING).build();
         JobApplication app3 = JobApplicationBuilder.aDefaultApplication().withCompany("Meta").withRole("Software Engineer").withStatus(ApplicationStatus.REJECTED).build();

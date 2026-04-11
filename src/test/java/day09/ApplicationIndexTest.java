@@ -1,6 +1,7 @@
 package day09;
 import day05.ApplicationStatus;
 import day05.JobApplication;
+import day05.JobApplicationBuilder;
 import day05.Money;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,24 +23,24 @@ class ApplicationIndexTest {
     @Test
     void  add_increasesAllSize() {
         assertEquals(0, index.all().size() , "Initial size should be zero");
-        Money expectedSalary = new Money(1000L , "EUR");
-        index.add(new JobApplication("Meta" , "Backend" , ApplicationStatus.APPLIED , LocalDate.now() ,expectedSalary ,UUID.randomUUID()));
+        index.add(JobApplicationBuilder.aDefaultApplication().build());
         assertEquals(1 , index.all().size(), "After one add , size should be 1");
-        index.add(new JobApplication("Google" , "Engineer" , ApplicationStatus.APPLIED , LocalDate.now() ,expectedSalary ,UUID.randomUUID()));
+        index.add(JobApplicationBuilder.aDefaultApplication().build());
         assertEquals(2 , index.all().size() , "After second add , the size should be 2");
     }
 
     @Test
     void addNullApplication(){
-        assertThrows(IllegalArgumentException.class,() -> index.add(new JobApplication(null , null , null ,null ,null, null)));
+        assertThrows(IllegalArgumentException.class,() ->
+                index.add(new JobApplication(
+                        null , null , null ,null ,null, null)));
     }
 
     @Test
     void findByCompany_returnsCorrectSubset(){
-        Money expectedSalary = new Money(1000L , "EUR");
-        JobApplication app1 = new JobApplication("Meta" , "Backend" , ApplicationStatus.APPLIED , LocalDate.now() ,expectedSalary ,UUID.randomUUID());
-        JobApplication app2 =  new JobApplication("Meta" , "Engineer" , ApplicationStatus.APPLIED , LocalDate.now() ,expectedSalary ,UUID.randomUUID());
-        JobApplication app3 = new JobApplication("Google" , "Data Analysis" , ApplicationStatus.APPLIED , LocalDate.now() ,expectedSalary ,UUID.randomUUID());
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().withCompany("Meta").build();
+        JobApplication app2 =  JobApplicationBuilder.aDefaultApplication().withCompany("Meta").build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication().build();
 
         index.add(app1);
         index.add(app2);
@@ -55,8 +56,7 @@ class ApplicationIndexTest {
 
     @Test
     void findByCompany_unknown_returnsEmptyList(){
-        Money expectedSalary = new Money(1000L , "EUR");
-        JobApplication app = new JobApplication("Meta" , "Backend" , ApplicationStatus.APPLIED , LocalDate.now() ,expectedSalary ,UUID.randomUUID());
+        JobApplication app = JobApplicationBuilder.aDefaultApplication().build();
 
         index.add(app);
 
@@ -67,10 +67,9 @@ class ApplicationIndexTest {
 
     @Test
     void countByStatus_returnsCorrectCounts(){
-        Money expectedSalary = new Money(1000L , "EUR");
-        JobApplication app1 = new JobApplication("Meta" , "Backend" , ApplicationStatus.APPLIED , LocalDate.now() ,expectedSalary ,UUID.randomUUID());
-        JobApplication app2 =  new JobApplication("Meta" , "Engineer" , ApplicationStatus.APPLIED , LocalDate.now() ,expectedSalary ,UUID.randomUUID());
-        JobApplication app3 = new JobApplication("Google" , "Data Analysis" , ApplicationStatus.INTERVIEWING , LocalDate.now() ,expectedSalary ,UUID.randomUUID());
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().build();
+        JobApplication app2 =  JobApplicationBuilder.aDefaultApplication().build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication().withStatus(ApplicationStatus.INTERVIEWING).build();
         index.add(app1);
         index.add(app2);
         index.add(app3);

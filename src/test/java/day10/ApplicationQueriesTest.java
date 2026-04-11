@@ -1,6 +1,7 @@
 package day10;
 import day05.ApplicationStatus;
 import day05.JobApplication;
+import day05.JobApplicationBuilder;
 import day05.Money;
 import org.junit.jupiter.api.*;
 
@@ -14,11 +15,9 @@ class ApplicationQueriesTest {
 
     @Test
     void filterByTitleKeyword_matchesSomeApplications_caseInsensitive() {
-        Money salary = new Money(1000L, "EUR");
-        LocalDate date = LocalDate.of(2026, 4, 5);
-        JobApplication app1 = new JobApplication("Meta", "BACKEND", ApplicationStatus.APPLIED, date, salary, UUID.randomUUID());
-        JobApplication app2 = new JobApplication("Amazon", "Engineer", ApplicationStatus.INTERVIEWING, date, salary, UUID.randomUUID());
-        JobApplication app3 = new JobApplication("Amazon", "backend", ApplicationStatus.REJECTED, date, salary, UUID.randomUUID());
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().withRole("BACKEND").build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication().withRole("Engineer").build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication().withRole("backend").build();
         List<JobApplication> list = new ArrayList<>();
         list.add(app1);
         list.add(app2);
@@ -34,9 +33,7 @@ class ApplicationQueriesTest {
 
     @Test
     void filterByTitleKeyword_noMatches_returnsEmptyList() {
-        Money salary = new Money(1000L, "EUR");
-        LocalDate date = LocalDate.of(2026, 4, 5);
-        JobApplication app = new JobApplication("Meta", "BACKEND", ApplicationStatus.APPLIED, date, salary, UUID.randomUUID());
+        JobApplication app = JobApplicationBuilder.aDefaultApplication().withRole("Data Analysis").build();
         List<JobApplication> list = List.of(app);
 
         List<JobApplication> result = ApplicationQueries.filterByTitleKeyword(list, "Engineer");
@@ -59,14 +56,14 @@ class ApplicationQueriesTest {
 
     @Test
     void filterAppliedAfter_returnsOnlyApplicationsAfterGivenDate() {
-        Money salary = new Money(1000L, "EUR");
+
         LocalDate date1 = LocalDate.of(2026, 4, 5);
         LocalDate date2 = LocalDate.of(2020, 4, 5);
         LocalDate date3 = LocalDate.of(2026, 1, 1);
 
-        JobApplication app1 = new JobApplication("Meta", "BACKEND", ApplicationStatus.APPLIED, date1, salary, UUID.randomUUID());
-        JobApplication app2 = new JobApplication("Amazon", "Engineer", ApplicationStatus.INTERVIEWING, date2, salary, UUID.randomUUID());
-        JobApplication app3 = new JobApplication("Amazon", "backend", ApplicationStatus.REJECTED, date3, salary, UUID.randomUUID());
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().withAppliedDate(date1).build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication().withAppliedDate(date2).build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication().withAppliedDate(date3).build();
         List<JobApplication> list = List.of(app1, app2, app3);
 
         LocalDate appliedAfter = LocalDate.of(2026, 1, 1);
@@ -93,14 +90,11 @@ class ApplicationQueriesTest {
 
     @Test
     void filterByCompanyPrefix_matchesByPrefix_caseInsensitive() {
-        Money salary = new Money(1000L, "EUR");
-        LocalDate date1 = LocalDate.of(2026, 4, 5);
-        LocalDate date2 = LocalDate.of(2020, 4, 5);
-        LocalDate date3 = LocalDate.of(2026, 1, 1);
 
-        JobApplication app1 = new JobApplication("Meta", "BACKEND", ApplicationStatus.APPLIED, date1, salary, UUID.randomUUID());
-        JobApplication app2 = new JobApplication("AMAZON", "Engineer", ApplicationStatus.INTERVIEWING, date2, salary, UUID.randomUUID());
-        JobApplication app3 = new JobApplication("amazon", "backend", ApplicationStatus.REJECTED, date3, salary, UUID.randomUUID());
+
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication().withCompany("AMAZON").build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication().withCompany("amazon").build();
         List<JobApplication> list = List.of(app1, app2, app3);
 
         List<JobApplication> result = ApplicationQueries.filterByCompanyPrefix(list, "amA");
@@ -113,10 +107,8 @@ class ApplicationQueriesTest {
 
     @Test
     void filterByCompanyPrefix_noMatches_returnsEmptyList() {
-        Money salary = new Money(1000L, "EUR");
-        LocalDate date = LocalDate.of(2026, 4, 5);
-        JobApplication app1 = new JobApplication("Meta", "BACKEND", ApplicationStatus.APPLIED, date, salary, UUID.randomUUID());
-        JobApplication app2 = new JobApplication("Google", "Engineer", ApplicationStatus.INTERVIEWING, date, salary, UUID.randomUUID());
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication().build();
         List<JobApplication> list = List.of(app1, app2);
 
         List<JobApplication> result = ApplicationQueries.filterByCompanyPrefix(list, "zz");
