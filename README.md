@@ -16,6 +16,7 @@ For more detailed notes per day, see docs/ (planned).
 - Day 10 – Custom domain exceptions, JobApplication state transitions (immutable withStatus), and repository fail-fast error handling (findByIdOrThrow, duplicate checks, status updates) with focused tests on exception paths.
 - Day 11 - Generics and reusable infrastructure: Implemented generic containers (Box, Pair), collection utilities, and an in-memory generic store to practice type-safe reusable code.
 - Day 12 - Added ApplicationService on top of ApplicationRepository to handle job application use cases (create, query, update status) with tests.
+Day 13 – Testing power-up: added a JobApplication test data builder, made tests deterministic, and used JUnit 5 parameterized tests to cover business rules with fewer, cleaner tests.
 
 ## How to run tests
 
