@@ -3,6 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import day05.ApplicationStatus;
 import day05.JobApplication;
+import day05.JobApplicationBuilder;
 import day05.Money;
 import org.junit.jupiter.api.*;
 
@@ -21,15 +22,7 @@ class BoxTest {
 
     @Test
     void jobApplicationBoxStoresAndReturnValue(){
-        UUID id = UUID.randomUUID();
-        JobApplication application = new JobApplication(
-                "Meta",
-                "Backend Engineer",
-                ApplicationStatus.APPLIED,
-                LocalDate.now().minusDays(1),
-                new Money(4_000L, "EUR"),
-                id
-        );
+        JobApplication application = JobApplicationBuilder.aDefaultApplication().build();
         Box<JobApplication> box = new Box<>(application);
         JobApplication value = box.getValue();
 

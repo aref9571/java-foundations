@@ -2,7 +2,6 @@ package day05;
 
 import day11.InvalidApplicationStateException;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -12,38 +11,28 @@ class JobApplicationTest {
 
     @Test
     void validCreationWorks() {
-        Money expectedSalary = new Money(5_000_00L, "EUR");
-        UUID id = UUID.randomUUID();
-        JobApplication app = new JobApplication(
-                "ACME Corp",
-                "Backend Engineer",
-                ApplicationStatus.APPLIED,
-                LocalDate.now(),
-                expectedSalary,
-                id
-        );
-
-        assertEquals("ACME Corp", app.company());
-        assertEquals("Backend Engineer", app.role());
-        assertEquals(ApplicationStatus.APPLIED, app.status());
-        assertEquals(LocalDate.now(), app.appliedDate());
-        assertEquals(expectedSalary, app.expectedSalary());
-        assertEquals(id, app.id());
+        Money expectedSalary = new Money(5_000_00L ,"EUR" );
+        UUID id = UUID.fromString("00000000-0000-0000-0000-000000000010");
+        LocalDate appliedDate = LocalDate.of(2026,1,1);
+        JobApplication app = JobApplicationBuilder.aDefaultApplication().withCompany("ACME Corp")
+                .withRole("Backend Engineer")
+                .withStatus(ApplicationStatus.APPLIED)
+                .withExpectedSalary(expectedSalary)
+                .withAppliedDate(appliedDate)
+                .withId(id)
+                .build();
+        assertEquals("ACME Corp" , app.company());
+        assertEquals("Backend Engineer" , app.role());
+        assertEquals(ApplicationStatus.APPLIED , app.status());
+        assertEquals(appliedDate , app.appliedDate());
+        assertEquals(expectedSalary , app.expectedSalary());
+        assertEquals(id , app.id());
     }
 
     @Test
     void blankCompanyThrows() {
-        UUID id = UUID.randomUUID();
-        Money expectedSalary = new Money(5_000_00L, "EUR");
         assertThrows(IllegalArgumentException.class, () ->
-                new JobApplication(
-                        " ",
-                        "Backend Engineer",
-                        ApplicationStatus.APPLIED,
-                        LocalDate.now(),
-                        expectedSalary,
-                        id
-                ));
+                JobApplicationBuilder.aDefaultApplication().withCompany(" ").build());
     }
 
     @Test
@@ -51,54 +40,22 @@ class JobApplicationTest {
         UUID id = UUID.randomUUID();
         Money expectedSalary = new Money(5_000_00L, "EUR");
         assertThrows(IllegalArgumentException.class, () ->
-                new JobApplication(
-                        "ACME Corp",
-                        " ",
-                        ApplicationStatus.APPLIED,
-                        LocalDate.now(),
-                        expectedSalary,
-                        id
-                ));
+                JobApplicationBuilder.aDefaultApplication().withRole(" ").build());
     }
 
     @Test
     void futureAppliedDateThrows() {
-        LocalDate future = LocalDate.now().plusDays(1);
-        UUID id = UUID.randomUUID();
-        Money expectedSalary = new Money(5_000_00L, "EUR");
+        LocalDate appliedDate = LocalDate.of(2027 , 1 , 1);
         assertThrows(IllegalArgumentException.class, () ->
-                new JobApplication(
-                        "ACME Corp",
-                        "Backend Engineer",
-                        ApplicationStatus.APPLIED,
-                        future,
-                        expectedSalary,
-                        id
-                ));
+                JobApplicationBuilder.aDefaultApplication().withAppliedDate(appliedDate).build());
     }
 
     @Test
     void isActiveTrueForAppliedAndInterviewing() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        Money expectedSalary = new Money(5_000_00L, "EUR");
-
-        JobApplication applied = new JobApplication(
-                "ACME Corp",
-                "Backend Engineer",
-                ApplicationStatus.APPLIED,
-                LocalDate.now(),
-                expectedSalary,
-                id1
-        );
-        JobApplication interviewing = new JobApplication(
-                "ACME Corp",
-                "Backend Engineer",
-                ApplicationStatus.INTERVIEWING,
-                LocalDate.now(),
-                expectedSalary,
-                id2
-        );
+        JobApplication applied = JobApplicationBuilder.aDefaultApplication()
+                .withStatus(ApplicationStatus.APPLIED).build();
+        JobApplication interviewing = JobApplicationBuilder.aDefaultApplication()
+                .withStatus(ApplicationStatus.INTERVIEWING).build();
 
         assertTrue(applied.isActive());
         assertTrue(interviewing.isActive());
@@ -106,25 +63,10 @@ class JobApplicationTest {
 
     @Test
     void isActiveFalseForOfferAndRejected() {
-        UUID id = UUID.randomUUID();
-        Money expectedSalary = new Money(5_000_00L, "EUR");
-
-        JobApplication offer = new JobApplication(
-                "ACME Corp",
-                "Backend Engineer",
-                ApplicationStatus.OFFER,
-                LocalDate.now(),
-                expectedSalary,
-                id
-        );
-        JobApplication rejected = new JobApplication(
-                "ACME Corp",
-                "Backend Engineer",
-                ApplicationStatus.REJECTED,
-                LocalDate.now(),
-                expectedSalary,
-                id
-        );
+        JobApplication rejected = JobApplicationBuilder.aDefaultApplication()
+                .withStatus(ApplicationStatus.REJECTED).build();
+        JobApplication offer = JobApplicationBuilder.aDefaultApplication()
+                .withStatus(ApplicationStatus.OFFER).build();
 
         assertFalse(offer.isActive());
         assertFalse(rejected.isActive());
@@ -132,17 +74,7 @@ class JobApplicationTest {
 
     @Test
     void withStatusReturnsNewInstanceWithUpdatedStatus() {
-        UUID id = UUID.randomUUID();
-        Money expectedSalary = new Money(5_000_00L, "EUR");
-
-        JobApplication original = new JobApplication(
-                "ACME Corp",
-                "Backend Engineer",
-                ApplicationStatus.APPLIED,
-                LocalDate.now(),
-                expectedSalary,
-                id
-        );
+       JobApplication original = JobApplicationBuilder.aDefaultApplication().build();
 
         JobApplication updated = original.withStatus(ApplicationStatus.INTERVIEWING);
 
@@ -152,17 +84,7 @@ class JobApplicationTest {
     }
     @Test
     void appliedToOffer_shouldThrowInvalidApplicationStateException() {
-        UUID id = UUID.randomUUID();
-        Money expectedSalary = new Money(5_000_00L, "EUR");
-
-        JobApplication original = new JobApplication(
-                "ACME Corp",
-                "Backend Engineer",
-                ApplicationStatus.APPLIED,
-                LocalDate.now().minusDays(1),
-                expectedSalary,
-                id
-        );
+        JobApplication original = JobApplicationBuilder.aDefaultApplication().build();
         InvalidApplicationStateException ex = assertThrows(
                 InvalidApplicationStateException.class,
                 () -> original.withStatus(ApplicationStatus.OFFER)
@@ -172,17 +94,8 @@ class JobApplicationTest {
     }
     @Test
     void rejectedToApplied_shouldThrowInvalidApplicationStateException() {
-        UUID id = UUID.randomUUID();
-        Money expectedSalary = new Money(5_000_00L, "EUR");
-
-        JobApplication original = new JobApplication(
-                "ACME Corp",
-                "Backend Engineer",
-                ApplicationStatus.REJECTED,
-                LocalDate.now().minusDays(1),
-                expectedSalary,
-                id
-        );
+        JobApplication original = JobApplicationBuilder.aDefaultApplication()
+                .withStatus(ApplicationStatus.REJECTED).build();
         InvalidApplicationStateException ex = assertThrows(
                 InvalidApplicationStateException.class,
                 () -> original.withStatus(ApplicationStatus.APPLIED)

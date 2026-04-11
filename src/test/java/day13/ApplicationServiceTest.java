@@ -2,6 +2,7 @@ package day13;
 
 import day05.ApplicationStatus;
 import day05.JobApplication;
+import day05.JobApplicationBuilder;
 import day05.Money;
 import day10.ApplicationRepository;
 import day11.ApplicationNotFoundException;
@@ -85,16 +86,14 @@ class ApplicationServiceTest {
 
     @Test
     void findByStatus_returnsOnlyMatchingApplications() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
 
-        Money expectedSalary = new Money(1000L, "EUR");
-        LocalDate appliedDate = LocalDate.now().minusDays(1);
 
-        JobApplication app1 = new JobApplication("Meta", "Backend", ApplicationStatus.REJECTED, appliedDate, expectedSalary, id1);
-        JobApplication app2 = new JobApplication("Google", "Backend", ApplicationStatus.APPLIED, appliedDate.minusDays(1), expectedSalary, id2);
-        JobApplication app3 = new JobApplication("Amazon", "Backend", ApplicationStatus.APPLIED, appliedDate.minusDays(2), expectedSalary, id3);
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication()
+                .withCompany("Meta").withStatus(ApplicationStatus.REJECTED).build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication()
+                .withCompany("Google").withStatus(ApplicationStatus.APPLIED).build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication()
+                .withCompany("Amazon").withStatus(ApplicationStatus.APPLIED).build();
 
         repository.add(app1);
         repository.add(app2);

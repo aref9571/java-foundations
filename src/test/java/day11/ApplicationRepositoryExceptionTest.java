@@ -3,6 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import day05.ApplicationStatus;
 import day05.JobApplication;
+import day05.JobApplicationBuilder;
 import day05.Money;
 import day10.ApplicationRepository;
 import org.junit.jupiter.api.*;
@@ -22,15 +23,7 @@ class ApplicationRepositoryExceptionTest {
 
     @Test
     void findByIdOrThrow_unknownId_shouldThrowApplicationNotFoundException() {
-        UUID appId = UUID.randomUUID();
-        JobApplication app = new JobApplication(
-                "Amazon",
-                "Backend",
-                ApplicationStatus.APPLIED,
-                LocalDate.now().minusDays(1),
-                new Money(1_000L, "EUR"),
-                appId
-        );
+        JobApplication app = JobApplicationBuilder.aDefaultApplication().build();
         repository.add(app);
 
         UUID unknown = UUID.randomUUID();
@@ -53,24 +46,9 @@ class ApplicationRepositoryExceptionTest {
 
     @Test
     void add_duplicateCompanyAndRole_shouldThrowDuplicateApplicationException() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        JobApplication first = new JobApplication(
-                "Amazon",
-                "Backend",
-                ApplicationStatus.APPLIED,
-                LocalDate.now().minusDays(1),
-                new Money(1_000L, "EUR"),
-                id1
-        );
-        JobApplication duplicate = new JobApplication(
-                "Amazon",
-                "Backend",
-                ApplicationStatus.APPLIED,
-                LocalDate.now().minusDays(2),
-                new Money(2_000L, "EUR"),
-                id2
-        );
+
+        JobApplication first = JobApplicationBuilder.aDefaultApplication().build();
+        JobApplication duplicate = JobApplicationBuilder.aDefaultApplication().build();
 
         repository.add(first);
 
@@ -78,8 +56,8 @@ class ApplicationRepositoryExceptionTest {
                 DuplicateApplicationException.class,
                 () -> repository.add(duplicate)
         );
-        assertTrue(ex.getMessage().contains("Amazon"));
-        assertTrue(ex.getMessage().contains("Backend"));
+        assertTrue(ex.getMessage().contains("DefaultCorp"));
+        assertTrue(ex.getMessage().contains("Backend Engineer"));
     }
 
     @Test
@@ -95,15 +73,8 @@ class ApplicationRepositoryExceptionTest {
 
     @Test
     void updateStatus_invalidTransition_shouldThrowInvalidApplicationStateException() {
-        UUID id = UUID.randomUUID();
-        JobApplication rejected = new JobApplication(
-                "Google",
-                "Backend Engineer",
-                ApplicationStatus.REJECTED,
-                LocalDate.now().minusDays(1),
-                new Money(3_000L, "EUR"),
-                id
-        );
+        JobApplication rejected = JobApplicationBuilder.aDefaultApplication().withStatus(ApplicationStatus.REJECTED).build();
+        UUID id = rejected.id();
         repository.add(rejected);
 
         InvalidApplicationStateException ex = assertThrows(
@@ -115,15 +86,8 @@ class ApplicationRepositoryExceptionTest {
 
     @Test
     void updateStatus_validTransition_shouldUpdateRepositoryAndReturnUpdatedApplication() {
-        UUID id = UUID.randomUUID();
-        JobApplication applied = new JobApplication(
-                "Meta",
-                "Backend Engineer",
-                ApplicationStatus.APPLIED,
-                LocalDate.now().minusDays(1),
-                new Money(4_000L, "EUR"),
-                id
-        );
+        JobApplication applied = JobApplicationBuilder.aDefaultApplication().withStatus(ApplicationStatus.APPLIED).build();
+        UUID id = applied.id();
         repository.add(applied);
 
         JobApplication updated = repository.updateStatus(id, ApplicationStatus.INTERVIEWING);

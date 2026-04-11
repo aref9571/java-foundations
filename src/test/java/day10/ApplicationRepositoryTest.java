@@ -1,6 +1,7 @@
 package day10;
 import day05.ApplicationStatus;
 import day05.JobApplication;
+import day05.JobApplicationBuilder;
 import day05.Money;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -15,11 +16,9 @@ class ApplicationRepositoryTest {
     }
     @Test
     void findAll_returnsAllApplications_andIsUnmodifiable(){
-        Money salary = new Money(1000L , "EUR");
-        LocalDate date = LocalDate.of(2026 , 4 , 5);
-        JobApplication app1 = new JobApplication("Meta" , "Backend" , ApplicationStatus.APPLIED , date , salary , UUID.randomUUID());
-        JobApplication app2 = new JobApplication("Google" , "Engineer" , ApplicationStatus.INTERVIEWING , date , salary , UUID.randomUUID());
-        JobApplication app3 = new JobApplication("Amazon" , "Backend" , ApplicationStatus.REJECTED , date , salary , UUID.randomUUID());
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().withCompany("Meta").build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication().withCompany("Google").build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication().withCompany("Amazon").build();
         repository.add(app1);
         repository.add(app2);
         repository.add(app3);
@@ -33,9 +32,7 @@ class ApplicationRepositoryTest {
     }
     @Test
     void findByCompany_unknownCompany_returnsEmptyList(){
-        Money salary = new Money(1000L, "EUR");
-        LocalDate date = LocalDate.of(2026, 4, 5);
-        repository.add(new JobApplication("Meta", "Backend", ApplicationStatus.APPLIED, date, salary, UUID.randomUUID()));
+        repository.add(JobApplicationBuilder.aDefaultApplication().build());
 
         List<JobApplication> result = repository.findByCompany("Google");
         assertTrue(result.isEmpty());
@@ -48,11 +45,9 @@ class ApplicationRepositoryTest {
     }
     @Test
     void findByStatus_returnsOnlyMatchingStatus(){
-        Money salary = new Money(1000L , "EUR");
-        LocalDate date = LocalDate.of(2026 , 4 , 5);
-        JobApplication app1 = new JobApplication("Meta" , "Backend" , ApplicationStatus.APPLIED , date , salary , UUID.randomUUID());
-        JobApplication app2 = new JobApplication("Amazon" , "Engineer" , ApplicationStatus.APPLIED , date , salary , UUID.randomUUID());
-        JobApplication app3 = new JobApplication("Amazon" , "Backend" , ApplicationStatus.REJECTED , date , salary , UUID.randomUUID());
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().withCompany("Google").withRole("Engineer").build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication().withCompany("Meta").withRole("Software Engineer").build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication().withStatus(ApplicationStatus.REJECTED).build();
         repository.add(app1);
         repository.add(app2);
         repository.add(app3);
@@ -71,9 +66,9 @@ class ApplicationRepositoryTest {
     void countActive_returnsNumberOfActiveApplications(){
         Money salary = new Money(1000L , "EUR");
         LocalDate date = LocalDate.of(2026 , 4 , 5);
-        JobApplication app1 = new JobApplication("Meta" , "Backend" , ApplicationStatus.APPLIED , date , salary , UUID.randomUUID());
-        JobApplication app2 = new JobApplication("Amazon" , "Engineer" , ApplicationStatus.INTERVIEWING , date , salary , UUID.randomUUID());
-        JobApplication app3 = new JobApplication("Amazon" , "Backend" , ApplicationStatus.REJECTED , date , salary , UUID.randomUUID());
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication().withCompany("Amazon").withRole("NA").withStatus(ApplicationStatus.INTERVIEWING).build();
+        JobApplication app3 = JobApplicationBuilder.aDefaultApplication().withCompany("Meta").withRole("Software Engineer").withStatus(ApplicationStatus.REJECTED).build();
         repository.add(app1);
         repository.add(app2);
         repository.add(app3);
