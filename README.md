@@ -17,6 +17,7 @@ For more detailed notes per day, see docs/ (planned).
 - Day 11 - Generics and reusable infrastructure: Implemented generic containers (Box, Pair), collection utilities, and an in-memory generic store to practice type-safe reusable code.
 - Day 12 - Added ApplicationService on top of ApplicationRepository to handle job application use cases (create, query, update status) with tests.
 Day 13 – Testing power-up: added a JobApplication test data builder, made tests deterministic, and used JUnit 5 parameterized tests to cover business rules with fewer, cleaner tests.
+Day 14 – File I/O and persistence: added a CSV converter and a file-backed store for JobApplication, with tests that verify saving and loading applications from disk.
 
 ## How to run tests
 
