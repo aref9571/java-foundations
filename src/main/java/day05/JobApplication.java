@@ -126,8 +126,5 @@ public final class JobApplication {
         if (appliedDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("appliedDate must not be in the future");
         }
-        if (expectedSalary == null) {
-            throw new IllegalArgumentException("expectedSalary must not be null");
-        }
     }
 }
