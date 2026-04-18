@@ -28,7 +28,7 @@ public final class JobApplicationCsvConverter {
             expectedSalaryCents = String.valueOf(app.expectedSalary().amountInCents());
             currency = app.expectedSalary().currency();
         }
-        return String.join("|" , id , company , role , status , appliedDate , expectedSalaryCents , currency);
+        return String.join("|" , id , company , role , status , appliedDate ,expectedSalaryCents ,  currency);
     }
 
     public static JobApplication fromLine(String line){

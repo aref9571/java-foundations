@@ -73,6 +73,10 @@ public class ApplicationRepository {
         }
 
         JobApplication existing = findByIdOrThrow(id);
+        System.out.println("[DEBUG] [ApplicationRepository] Updating status | " +
+                "id=" + id +
+                ", from=" + existing.status() +
+                ", to=" + newStatus);
         JobApplication updated = existing.withStatus(newStatus);
 
         int index = applications.indexOf(existing);
@@ -84,6 +88,9 @@ public class ApplicationRepository {
         List<JobApplication> companyList = byCompany.get(existing.company());
         int companyIndex = companyList.indexOf(existing);
         companyList.set(companyIndex , updated);
+        System.out.println("[INFO] [ApplicationRepository] Updated status | " +
+                "id=" + id +
+                ", newStatus=" + updated.status());
         return updated;
     }
 

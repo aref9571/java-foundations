@@ -17,6 +17,9 @@ public class FileApplicationStore {
     }
 
     public void saveAll(List<JobApplication> applications){
+        System.out.println("[INFO] [FileApplicationStore] Saving applications | " +
+                "file=" + file +
+                ", count=" + applications.size());
         List<String> lines = applications.stream().map(JobApplicationCsvConverter::toLine).toList();
 
         try {
@@ -28,13 +31,25 @@ public class FileApplicationStore {
     }
 
     public List<JobApplication> loadAll(){
+        System.out.println("[DEBUG] [FileApplicationStore] Loading applications | file=" + file);
         if (!Files.exists(file)){
             return List.of();
         }
 
         try{
             List<String> lines = Files.readAllLines(file,StandardCharsets.UTF_8);
-            return lines.stream().map(JobApplicationCsvConverter::fromLine).toList();
+            System.out.println("[INFO] [FileApplicationStore] Read lines from file | " +
+                    "file=" + file +
+                    ", lineCount=" + lines.size());
+            return lines.stream().map(line -> {
+                try {
+                    return JobApplicationCsvConverter.fromLine(line);
+                }
+                catch (RuntimeException e){
+                    System.out.println("[ERROR] [FileApplicationStore] Failed to parse line | line=\"" + line + "\"");
+                    throw e;
+                }
+            }).toList();
         }
         catch (IOException e){
             throw new RuntimeException("Failed to read applications from file " + file , e);

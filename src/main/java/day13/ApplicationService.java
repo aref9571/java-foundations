@@ -26,6 +26,11 @@ public class ApplicationService {
         UUID id = UUID.randomUUID();
         JobApplication application = new JobApplication(company,role, ApplicationStatus.APPLIED , appliedDate ,expectedSalary ,id);
         repository.add(application);
+        System.out.println("[INFO] [ApplicationService] Created application | " +
+                "id=" + id +
+                ", company=" + company +
+                ", role=" + role +
+                ", status=" + application.status());
         return application;
     }
 
@@ -47,7 +52,11 @@ public class ApplicationService {
         if (id == null){
             throw new IllegalArgumentException("id must not be null");
         }
-        return repository.updateStatus(id , ApplicationStatus.INTERVIEWING);
+        System.out.println("[DEBUG] [ApplicationService] Moving to INTERVIEWING | id=" + id);
+        JobApplication updated = repository.updateStatus(id , ApplicationStatus.INTERVIEWING);
+        System.out.println("[INFO] [ApplicationService] Moved to INTERVIEWING | id=" + id +
+                ", newStatus=" + updated.status());
+        return updated;
     }
 
     public JobApplication reject(UUID id){
@@ -60,6 +69,7 @@ public class ApplicationService {
         if (id == null){
             throw new IllegalArgumentException("id must not be null");
         }
+
         return repository.updateStatus(id , ApplicationStatus.OFFER);
     }
 
