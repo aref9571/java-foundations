@@ -16,8 +16,9 @@ For more detailed notes per day, see docs/ (planned).
 - Day 10 – Custom domain exceptions, JobApplication state transitions (immutable withStatus), and repository fail-fast error handling (findByIdOrThrow, duplicate checks, status updates) with focused tests on exception paths.
 - Day 11 - Generics and reusable infrastructure: Implemented generic containers (Box, Pair), collection utilities, and an in-memory generic store to practice type-safe reusable code.
 - Day 12 - Added ApplicationService on top of ApplicationRepository to handle job application use cases (create, query, update status) with tests.
-Day 13 – Testing power-up: added a JobApplication test data builder, made tests deterministic, and used JUnit 5 parameterized tests to cover business rules with fewer, cleaner tests.
+- Day 13 – Testing power-up: added a JobApplication test data builder, made tests deterministic, and used JUnit 5 parameterized tests to cover business rules with fewer, cleaner tests.
 Day 14 – File I/O and persistence: added a CSV converter and a file-backed store for JobApplication, with tests that verify saving and loading applications from disk.
+- Day 15 – Debugging and logging: added a Day15DebugScenario to exercise JobTrackr end-to-end, practiced stepping through service/repository/file-store code with the debugger, and introduced structured INFO/DEBUG/ERROR-style log messages to trace application flow.
 
 ## How to run tests
 
