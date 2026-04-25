@@ -55,6 +55,10 @@ Learning core Java as a foundation for backend and cloud engineering, using a sm
 - **Day 17 – Stream-based collection processing**
    Used Java Streams in ApplicationStreamQueries to filter job applications by company/status, list unique sorted company names, and count by status, and added a Stream-based listActive() in ApplicationService, all covered by unit tests.
 
+- **Day 18 - Stream-based statistics**
+   Added ApplicationStatistics with Stream-based aggregations (status, company, active/final counts), extended ApplicationService with summary methods, and updated JobTrackrCli to print a small statistics dashboard.
+
+
 ## Project structure
 
 - `src/main/java` – production code organized by `day0x` packages (each day focuses on a core Java / backend concept).
