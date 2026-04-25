@@ -4,7 +4,8 @@ import day05.ApplicationStatus;
 import day05.JobApplication;
 import day05.Money;
 import day10.ApplicationRepository;
-
+import day18.ApplicationStatistics;
+import java.util.Map;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -16,11 +17,9 @@ public class ApplicationService {
     public ApplicationService(ApplicationRepository repository){
         this.repository = Objects.requireNonNull(repository , "repository must not be null");
     }
-
     public List<JobApplication> getAllApplications(){
         return repository.findAll();
     }
-
     public JobApplication applyForJob(String company , String role , LocalDate appliedDate , Money expectedSalary){
         validateApplicationInput(company ,role ,appliedDate ,expectedSalary);
         UUID id = UUID.randomUUID();
@@ -33,21 +32,18 @@ public class ApplicationService {
                 ", status=" + application.status());
         return application;
     }
-
     public List<JobApplication> findByCompany(String company){
         if (company == null || company.isBlank()){
             throw new IllegalArgumentException("company must be non blank");
         }
         return repository.findByCompany(company);
     }
-
     public List<JobApplication> findByStatus(ApplicationStatus status){
         if (status == null){
             throw new IllegalArgumentException("status must not be null");
         }
         return repository.findByStatus(status);
     }
-
     public JobApplication moveToInterviewing(UUID id){
         if (id == null){
             throw new IllegalArgumentException("id must not be null");
@@ -58,7 +54,6 @@ public class ApplicationService {
                 ", newStatus=" + updated.status());
         return updated;
     }
-
     public JobApplication reject(UUID id){
         if (id == null){
             throw new IllegalArgumentException("id must not be null");
@@ -71,6 +66,22 @@ public class ApplicationService {
         }
 
         return repository.updateStatus(id , ApplicationStatus.OFFER);
+    }
+    public Map<ApplicationStatus , Long> getStatusSummary(){
+        List<JobApplication> all = repository.findAll();
+        return ApplicationStatistics.countByStatus(all);
+    }
+    public List<String> getTopCompanies(int limit){
+        List<JobApplication> all = repository.findAll();
+        return ApplicationStatistics.topCompanies(all,limit);
+    }
+    public long getActiveCount(){
+        List<JobApplication> all = repository.findAll();
+        return ApplicationStatistics.countByActive(all);
+    }
+    public long getFinalCount(){
+        List<JobApplication> all = repository.findAll();
+        return ApplicationStatistics.countFinal(all);
     }
 
 
