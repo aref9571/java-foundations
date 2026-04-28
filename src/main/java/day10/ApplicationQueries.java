@@ -14,13 +14,8 @@ public final class ApplicationQueries {
             throw new IllegalArgumentException("Keyword must be non blank");
         }
         String normalized = keyword.toLowerCase(Locale.ROOT);
-        List<JobApplication> result = new ArrayList<>();
-        for (JobApplication app : applications){
-            if (app.role() != null && app.role().toLowerCase(Locale.ROOT).contains(normalized)){
-                result.add(app);
-            }
-        }
-        return result;
+
+        return applications.stream().filter(app -> app.role() != null && app.role().toLowerCase(Locale.ROOT).contains(normalized)).toList();
 
     }
 
@@ -31,13 +26,7 @@ public final class ApplicationQueries {
         if (date == null){
             throw new IllegalArgumentException("Date must not be null");
         }
-        List<JobApplication> result = new ArrayList<>();
-        for (JobApplication app : applications){
-            if (app.appliedDate().isAfter(date)){
-                result.add(app);
-            }
-        }
-        return result;
+        return applications.stream().filter(app -> app.appliedDate().isAfter(date)).toList();
     }
 
     public static List<JobApplication> filterByCompanyPrefix(List<JobApplication> applications , String prefix){
@@ -48,12 +37,6 @@ public final class ApplicationQueries {
             throw new IllegalArgumentException("Prefix must be non blank");
         }
         String normalize = prefix.toLowerCase(Locale.ROOT);
-        List<JobApplication> result = new ArrayList<>();
-        for (JobApplication app : applications){
-            if (app.company().toLowerCase(Locale.ROOT).startsWith(normalize)){
-                result.add(app);
-            }
-        }
-        return result;
+        return applications.stream().filter(app -> app.company().toLowerCase(Locale.ROOT).startsWith(normalize)).toList();
     }
 }

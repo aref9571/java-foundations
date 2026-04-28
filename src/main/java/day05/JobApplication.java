@@ -22,7 +22,7 @@ public final class JobApplication {
                           Money expectedSalary,
                           UUID id) {
 
-        validateRequiredFields(company, role, status, appliedDate, expectedSalary);
+        validateRequiredFields(company, role, status, appliedDate);
         this.company = company;
         this.role = role;
         this.status = status;
@@ -64,7 +64,7 @@ public final class JobApplication {
         if (newStatus == null) {
             throw new InvalidApplicationStateException("newStatus must not be null");
         }
-        if (this.status == ApplicationStatus.OFFER || this.status == ApplicationStatus.REJECTED){
+        if (isFinalStatus(this.status)){
             throw new InvalidApplicationStateException("Cannot change status: application is already in final state " + this.status);
         }
         if (this.status == ApplicationStatus.APPLIED && newStatus == ApplicationStatus.OFFER){
@@ -98,7 +98,8 @@ public final class JobApplication {
     @Override
     public String toString() {
         return "JobApplication{" +
-                "company='" + company + '\'' +
+                "id=" + id +
+                ", company='" + company + '\'' +
                 ", role='" + role + '\'' +
                 ", status=" + status +
                 ", appliedDate=" + appliedDate +
@@ -109,8 +110,7 @@ public final class JobApplication {
     private static void validateRequiredFields(String company,
                                                String role,
                                                ApplicationStatus status,
-                                               LocalDate appliedDate,
-                                               Money expectedSalary) {
+                                               LocalDate appliedDate) {
         if (company == null || company.isBlank()) {
             throw new IllegalArgumentException("company must be non-blank");
         }
@@ -126,5 +126,9 @@ public final class JobApplication {
         if (appliedDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("appliedDate must not be in the future");
         }
+    }
+
+    private static boolean isFinalStatus(ApplicationStatus status){
+        return status == ApplicationStatus.OFFER || status == ApplicationStatus.REJECTED;
     }
 }

@@ -1,7 +1,5 @@
 package day05;
-import day05.ApplicationStatus;
-import day05.JobApplication;
-import day05.Money;
+
 
 import java.time.LocalDate;
 import java.util.UUID;
