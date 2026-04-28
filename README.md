@@ -58,6 +58,10 @@ Learning core Java as a foundation for backend and cloud engineering, using a sm
 - **Day 18 - Stream-based statistics**
    Added ApplicationStatistics with Stream-based aggregations (status, company, active/final counts), extended ApplicationService with summary methods, and updated JobTrackrCli to print a small statistics dashboard.
 
+- **Day 19 - Query service and read-side views**
+   Added ApplicationQueryService with Stream-based queries for recent applications, role keyword search, and stuck applications; built scenario-based unit tests, and a QueryCli console dashboard that prints recent, backend, and stuck applications using the shared repository data.
+
+
 
 ## Project structure
 
