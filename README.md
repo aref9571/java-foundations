@@ -61,6 +61,9 @@ Learning core Java as a foundation for backend and cloud engineering, using a sm
 - **Day 19 - Query service and read-side views**
    Added ApplicationQueryService with Stream-based queries for recent applications, role keyword search, and stuck applications; built scenario-based unit tests, and a QueryCli console dashboard that prints recent, backend, and stuck applications using the shared repository data.
 
+- **Day 20 - Optionals and null-safe queries**
+   Refactored repository and service methods to return Optional<JobApplication> for “maybe missing” lookups instead of null, added findFirstByCompany and findMostRecentActive using Streams (filter, findFirst, max), and wrote focused tests to verify present/empty Optional behavior and clean error handling.
+
 
 
 ## Project structure
