@@ -44,6 +44,12 @@ public class ApplicationRepository {
         }
         return List.copyOf(list);
     }
+    public Optional<JobApplication> findFirstByCompany(String company){
+        if (company == null || company.isBlank()){
+            throw new IllegalArgumentException("company must not be blank");
+        }
+        return applications.stream().filter(app -> app.company().equalsIgnoreCase(company)).findFirst();
+    }
     public List<JobApplication> findByStatus(ApplicationStatus status){
         if (status == null){
             throw new IllegalArgumentException("Status must not be null");
@@ -62,7 +68,8 @@ public class ApplicationRepository {
         if (id == null){
             throw new IllegalArgumentException("id must not be null");
         }
-        return applications.stream().filter(app -> app.id().equals(id)).findFirst().orElseThrow(() -> new ApplicationNotFoundException("No application found with id: " + id));
+        return findById(id).
+                orElseThrow(() -> new ApplicationNotFoundException("No application found with id: " + id));
     }
     public JobApplication updateStatus(UUID id , ApplicationStatus newStatus){
         if (id == null){
@@ -92,6 +99,13 @@ public class ApplicationRepository {
                 "id=" + id +
                 ", newStatus=" + updated.status());
         return updated;
+    }
+
+    public Optional<JobApplication> findById(UUID id){
+        if (id == null) {
+            throw new IllegalArgumentException("id must not be null");
+        }
+        return applications.stream().filter(app -> app.id().equals(id)).findFirst();
     }
 
 }

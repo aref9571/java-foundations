@@ -5,11 +5,9 @@ import day05.JobApplication;
 import day05.Money;
 import day10.ApplicationRepository;
 import day18.ApplicationStatistics;
-import java.util.Map;
+
+import java.util.*;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 public class ApplicationService {
     private final ApplicationRepository repository;
@@ -37,6 +35,9 @@ public class ApplicationService {
             throw new IllegalArgumentException("company must be non blank");
         }
         return repository.findByCompany(company);
+    }
+    public Optional<JobApplication> findApplicationByCompany(String company){
+        return repository.findFirstByCompany(company);
     }
     public List<JobApplication> findByStatus(ApplicationStatus status){
         if (status == null){
@@ -83,15 +84,9 @@ public class ApplicationService {
         List<JobApplication> all = repository.findAll();
         return ApplicationStatistics.countFinal(all);
     }
-
-
-
-
-
-
-
-
-
+    public Optional<JobApplication> findMostRecentActive(){
+        return repository.findAll().stream().filter(JobApplication::isActive).max(Comparator.comparing(JobApplication::appliedDate));
+    }
 
 
     private void validateApplicationInput(String company , String role , LocalDate appliedDate , Money expectedSalary){

@@ -74,4 +74,42 @@ class ApplicationRepositoryTest {
         long result = repository.countActive();
         assertEquals(2L , result);
     }
+
+    @Test
+    void findById_returnsPresentWhenApplicationExists(){
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().build();
+        repository.add(app1);
+        Optional<JobApplication> result = repository.findById(app1.id());
+        assertTrue(result.isPresent());
+        assertEquals(app1, result.get());
+        assertEquals(app1 , result.get());
+
+    }
+    @Test
+    void findById_throwsIllegalArgumentExceptionWhenIdIsNull(){
+        assertThrows(IllegalArgumentException.class,() -> repository.findById(null));
+    }
+
+    @Test
+    void findFirstByCompany_returnsPresentWhenCompanyHasApplications(){
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().withCompany("Amazon").build();
+        repository.add(app1);
+        Optional<JobApplication> result = repository.findFirstByCompany("amazon");
+        assertTrue(result.isPresent());
+        assertEquals(app1 , result.get());
+    }
+
+    @Test
+    void findFirstByCompany_returnsEmptyWhenCompanyHasNoApplications(){
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().build();
+        repository.add(app1);
+        Optional<JobApplication> result = repository.findFirstByCompany("Amazon");
+        assertFalse(result.isPresent());
+        assertTrue(result.isEmpty());
+
+    }
+    @Test
+    void findFirstByCompany_throwsIllegalArgumentExceptionWhenCompanyIsBlank(){
+        assertThrows(IllegalArgumentException.class,() -> repository.findFirstByCompany(" "));
+    }
 }

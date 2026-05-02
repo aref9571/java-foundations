@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -153,5 +155,29 @@ class ApplicationServiceTest {
     void constructor_rejectsNullRepository() {
         assertThrows(NullPointerException.class,
                 () -> new ApplicationService(null));
+    }
+
+    @Test
+    void findApplicationByCompany_returnsPresentWhenCompanyHasApplications() {
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().build();
+        JobApplication app2 = JobApplicationBuilder.aDefaultApplication().withCompany("Amazon").withRole("NA").withStatus(ApplicationStatus.INTERVIEWING).build();
+        repository.add(app1);
+        repository.add(app2);
+        Optional<JobApplication> result = service.findApplicationByCompany("Amazon");
+        assertTrue(result.isPresent());
+        assertEquals("Amazon" , result.get().company());
+    }
+
+    @Test
+    void findApplicationByCompany_returnsEmptyWhenCompanyHasNoApplications(){
+        JobApplication app1 = JobApplicationBuilder.aDefaultApplication().withCompany("Amazon").withRole("NA").withStatus(ApplicationStatus.INTERVIEWING).build();
+        repository.add(app1);
+        Optional<JobApplication> result = service.findApplicationByCompany("Goggle");
+        assertTrue(result.isEmpty());
+
+    }
+    @Test
+    void findApplicationByCompany_throwsIllegalArgumentExceptionWhenCompanyIsBlank(){
+        assertThrows(IllegalArgumentException.class,() -> service.findApplicationByCompany(" "));
     }
 }
