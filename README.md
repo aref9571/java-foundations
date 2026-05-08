@@ -69,6 +69,8 @@ Learning core Java as a foundation for backend and cloud engineering, using a sm
    Practiced basic Thread and Runnable usage with join(), introduced ExecutorService with Callable and Future for controlled parallel tasks, and demonstrated race conditions on shared state plus a safe fix using AtomicInteger.
 
 
+**Day 22 - Threads, executors, and race conditions**
+   Introduced production-grade concurrency practices by avoiding shared mutable state, implementing ExecutorService-based processing over immutable snapshots and read-only data, and adding parallel JobTrackr statistics computation using fixed thread pools, defensive copies, and targeted unit tests to validate thread-safe behavior.
 
 ## Project structure
 
