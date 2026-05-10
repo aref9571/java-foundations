@@ -72,6 +72,9 @@ Learning core Java as a foundation for backend and cloud engineering, using a sm
 **Day 22 - Threads, executors, and race conditions**
    Introduced production-grade concurrency practices by avoiding shared mutable state, implementing ExecutorService-based processing over immutable snapshots and read-only data, and adding parallel JobTrackr statistics computation using fixed thread pools, defensive copies, and targeted unit tests to validate thread-safe behavior.
 
+**Day 23 - AtomicInteger vs synchronized under contenrion**
+   Implemented a CounterPerformance benchmark comparing AtomicInteger- and synchronized-based counters across varying contention levels, validated functional correctness of both approaches, and distilled practical guidelines for selecting non-blocking atomic updates versus monitor-based synchronization in concurrent backend code.
+
 ## Project structure
 
 - `src/main/java` – production code organized by `day0x` packages (each day focuses on a core Java / backend concept).
