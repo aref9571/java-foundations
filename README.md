@@ -75,6 +75,9 @@ Learning core Java as a foundation for backend and cloud engineering, using a sm
 **Day 23 - AtomicInteger vs synchronized under contenrion**
    Implemented a CounterPerformance benchmark comparing AtomicInteger- and synchronized-based counters across varying contention levels, validated functional correctness of both approaches, and distilled practical guidelines for selecting non-blocking atomic updates versus monitor-based synchronization in concurrent backend code.
 
+**Day 24 - Concurrent counters and background stats**
+   Added a thread-safe RequestCounter interface with AtomicInteger- and synchronized-based implementations plus concurrency tests, and implemented a StatsRefresher component that uses a ScheduledExecutorService and a volatile immutable snapshot to maintain application statistics in the background.
+
 ## Project structure
 
 - `src/main/java` – production code organized by `day0x` packages (each day focuses on a core Java / backend concept).
