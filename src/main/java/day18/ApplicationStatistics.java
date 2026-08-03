@@ -12,10 +12,7 @@ public final class ApplicationStatistics {
     private ApplicationStatistics(){}
 
     public static Map<ApplicationStatus, Long> countByStatus(List<JobApplication> applications){
-        if (applications == null){
-            return Map.of();
-        }
-        return applications.stream().collect(Collectors.groupingBy(JobApplication::status,Collectors.counting()));
+        return applications == null ? Map.of() : applications.stream().collect(Collectors.groupingBy(JobApplication::status,Collectors.counting()));
     }
 
     public static Map<String , Long> countByCompany(List<JobApplication> applications){
@@ -29,20 +26,23 @@ public final class ApplicationStatistics {
             return List.of();
         }
         Map<String , Long> counts = countByCompany(applications);
-        return counts.entrySet().stream().sorted(Map.Entry.<String , Long>comparingByValue().reversed()).
+        return counts.entrySet().stream().sorted(Map.Entry.<String, Long>comparingByValue().reversed()
+                        .thenComparing(Map.Entry.comparingByKey())).
                 limit(limit).map(Map.Entry::getKey).toList();
     }
 
     public static long countByActive(List<JobApplication> applications){
-        if (applications == null){
-            return 0L;
-        }
-        return applications.stream().filter(JobApplication::isActive).count();
+        return nonNullCountActiveApplication(applications);
     }
     public static long countFinal(List<JobApplication> applications){
-        if (applications == null){
-            return 0L;
-        }
-        return applications.stream().filter(app -> !app.isActive()).count();
+
+        return nonNullCountFinalApplication(applications);
+    }
+
+    private static long nonNullCountFinalApplication(List<JobApplication> applications){
+        return applications == null ? 0L : applications.stream().filter(app -> !app.isActive()).count();
+    }
+    private static long nonNullCountActiveApplication(List<JobApplication> applications){
+        return applications == null ? 0L : applications.stream().filter(JobApplication::isActive).count();
     }
 }

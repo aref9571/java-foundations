@@ -30,13 +30,14 @@ public class ExecutorExample {
             return result;
         };
 
-        Future<Integer> future = executor.submit(sumTask);
-
-        System.out.println("Main submitted task, now waiting on future...");
-        int result = future.get();
-        System.out.println("Future completed, result received.");
-
-        executor.shutdown();
-        return result;
+        try {
+            Future<Integer> future = executor.submit(sumTask);
+            System.out.println("Main submitted task, now waiting on future...");
+            int result = future.get();
+            System.out.println("Future completed, result received.");
+            return result;
+        } finally {
+            executor.shutdown();
+        }
     }
 }

@@ -36,4 +36,12 @@ class MoneyTest {
         assertEquals(300L , result.amountInCents());
         assertEquals("USD" , result.currency());
     }
+
+    @Test
+    void arithmeticOverflowThrowsInsteadOfWrapping(){
+        Money maximum = new Money(Long.MAX_VALUE, "USD");
+        Money oneCent = new Money(1, "USD");
+
+        assertThrows(ArithmeticException.class, () -> maximum.add(oneCent));
+    }
 }

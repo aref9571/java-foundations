@@ -1,7 +1,6 @@
 package day05;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class JobApplicationBuilder {
@@ -10,7 +9,7 @@ public class JobApplicationBuilder {
     private ApplicationStatus status = ApplicationStatus.APPLIED;
     private LocalDate appliedDate = LocalDate.of(2026 , 1 , 1);
     private Money expectedSalary = new Money(1000L , "EUR");
-    private UUID id = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    private UUID id = UUID.randomUUID();
 
     public static JobApplicationBuilder aDefaultApplication(){
         return new JobApplicationBuilder();

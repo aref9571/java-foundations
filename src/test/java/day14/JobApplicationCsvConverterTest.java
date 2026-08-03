@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import day05.JobApplication;
 import day05.JobApplicationBuilder;
+import day05.Money;
 import org.junit.jupiter.api.*;
 
 import java.util.UUID;
@@ -71,5 +72,24 @@ class JobApplicationCsvConverterTest {
 
         assertThrows(RuntimeException.class,
                 () -> JobApplicationCsvConverter.fromLine(badLine));
+    }
+
+    @Test
+    void toLineAndFromLine_roundTrip_withEscapedFieldsAndNullCurrencyLiteral() {
+        JobApplication application = JobApplicationBuilder.aDefaultApplication()
+                .withCompany("ACME|Europe\\Platform\nTeam")
+                .withRole("Backend|Engineer")
+                .withExpectedSalary(new Money(750_000, "null"))
+                .build();
+
+        assertEquals(application, JobApplicationCsvConverter.fromLine(
+                JobApplicationCsvConverter.toLine(application)));
+    }
+
+    @Test
+    void fromLine_rejectsPartiallyAbsentSalary() {
+        String line = UUID.randomUUID() + "|Company|Role|APPLIED|2026-04-11|~|EUR";
+
+        assertThrows(IllegalArgumentException.class, () -> JobApplicationCsvConverter.fromLine(line));
     }
 }

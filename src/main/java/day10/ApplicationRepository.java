@@ -11,73 +11,59 @@ public class ApplicationRepository {
     private final List<JobApplication> applications = new ArrayList<>();
     private final Map<String , List<JobApplication>> byCompany = new HashMap<>();
     private final Map<ApplicationStatus , List<JobApplication>> byStatus = new EnumMap<>(ApplicationStatus.class);
+    private final Map<UUID, JobApplication> byId = new HashMap<>();
 
     public ApplicationRepository(){
         for (ApplicationStatus status : ApplicationStatus.values()){
             byStatus.put(status , new ArrayList<>());
         }
     }
-    public void add(JobApplication app){
-        if (app == null){
-            throw new IllegalArgumentException("JobApplication must not be null");
-        }
+    public synchronized void add(JobApplication app){
+        requireNonNull(app , "application");
 
+        if (byId.containsKey(app.id())) {
+            throw new DuplicateApplicationException("Application id already exists: " + app.id());
+        }
         boolean alreadyExist = applications.stream().anyMatch(existing -> existing.company().equalsIgnoreCase(app.company()) && existing.role().equalsIgnoreCase(app.role()));
         if (alreadyExist){
             throw new DuplicateApplicationException("Application for " + app.role() + " at " + app.company() + " already exists");
         }
 
         applications.add(app);
+        byId.put(app.id(), app);
         byStatus.get(app.status()).add(app);
-        byCompany.computeIfAbsent(app.company() , c -> new ArrayList<>()).add(app);
+        byCompany.computeIfAbsent(normalizeCompany(app.company()) , c -> new ArrayList<>()).add(app);
     }
-    public List<JobApplication> findAll(){
+    public synchronized List<JobApplication> findAll(){
         return List.copyOf(applications);
     }
-    public List<JobApplication> findByCompany(String company){
-        if (company == null || company.isBlank()){
-            throw new IllegalArgumentException("Company must be non blank");
-        }
-        List<JobApplication> list = byCompany.get(company);
-        if (list == null){
-            return Collections.emptyList();
-        }
-        return List.copyOf(list);
+    public synchronized List<JobApplication> findByCompany(String company){
+        requireNonBlank(company , "company");
+        List<JobApplication> list = byCompany.get(normalizeCompany(company));
+        return copyOrEmpty(list);
     }
-    public Optional<JobApplication> findFirstByCompany(String company){
-        if (company == null || company.isBlank()){
-            throw new IllegalArgumentException("company must not be blank");
-        }
+    public synchronized Optional<JobApplication> findFirstByCompany(String company){
+        requireNonBlank(company , "company");
         return applications.stream().filter(app -> app.company().equalsIgnoreCase(company)).findFirst();
     }
-    public List<JobApplication> findByStatus(ApplicationStatus status){
-        if (status == null){
-            throw new IllegalArgumentException("Status must not be null");
-        }
+    public synchronized List<JobApplication> findByStatus(ApplicationStatus status){
+        requireNonNull(status , "status");
         List<JobApplication> list = byStatus.get(status);
-        if (list == null ){
-            return Collections.emptyList();
-        }
-        return List.copyOf(list);
+
+        return copyOrEmpty(list);
     }
-    public long countActive(){
+    public synchronized long countActive(){
         return applications.stream().filter(JobApplication::isActive).count();
     }
 
-    public JobApplication findByIdOrThrow(UUID id){
-        if (id == null){
-            throw new IllegalArgumentException("id must not be null");
-        }
+    public synchronized JobApplication findByIdOrThrow(UUID id){
+        idNullCheck(id);
         return findById(id).
                 orElseThrow(() -> new ApplicationNotFoundException("No application found with id: " + id));
     }
-    public JobApplication updateStatus(UUID id , ApplicationStatus newStatus){
-        if (id == null){
-            throw new IllegalArgumentException("id must not be null");
-        }
-        if (newStatus == null){
-            throw new IllegalArgumentException("newStatus must not be null");
-        }
+    public synchronized JobApplication updateStatus(UUID id , ApplicationStatus newStatus){
+        idNullCheck(id);
+        requireNonNull(newStatus , "newStatus");
 
         JobApplication existing = findByIdOrThrow(id);
         System.out.println("[DEBUG] [ApplicationRepository] Updating status | " +
@@ -88,11 +74,12 @@ public class ApplicationRepository {
 
         int index = applications.indexOf(existing);
         applications.set(index , updated);
+        byId.put(id, updated);
 
         byStatus.get(existing.status()).remove(existing);
         byStatus.get(updated.status()).add(updated);
 
-        List<JobApplication> companyList = byCompany.get(existing.company());
+        List<JobApplication> companyList = byCompany.get(normalizeCompany(existing.company()));
         int companyIndex = companyList.indexOf(existing);
         companyList.set(companyIndex , updated);
         System.out.println("[INFO] [ApplicationRepository] Updated status | " +
@@ -101,11 +88,33 @@ public class ApplicationRepository {
         return updated;
     }
 
-    public Optional<JobApplication> findById(UUID id){
-        if (id == null) {
+    public synchronized Optional<JobApplication> findById(UUID id){
+        idNullCheck(id);
+        return Optional.ofNullable(byId.get(id));
+    }
+
+
+
+    private static void requireNonNull(Object value, String fieldName){
+        Objects.requireNonNull(value , fieldName + " must not be null");
+    }
+    private static void idNullCheck(UUID value){
+        if (value == null){
             throw new IllegalArgumentException("id must not be null");
         }
-        return applications.stream().filter(app -> app.id().equals(id)).findFirst();
+    }
+    private static List<JobApplication> copyOrEmpty(List<JobApplication> apps){
+        return apps == null ? Collections.emptyList() : List.copyOf(apps);
+    }
+
+    private static String normalizeCompany(String company) {
+        return company.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private static void requireNonBlank(String s , String fieldName){
+        if (s == null || s.isBlank()){
+            throw new IllegalArgumentException(fieldName +  " must be non blank");
+        }
     }
 
 }

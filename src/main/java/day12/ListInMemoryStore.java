@@ -15,7 +15,7 @@ public class ListInMemoryStore<T> implements InMemoryStore<T>{
     }
 
     @Override
-    public List findAll() {
+    public List<T> findAll() {
         return List.copyOf(items);
     }
 

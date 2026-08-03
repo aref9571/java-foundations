@@ -45,10 +45,10 @@ class ApplicationTagsTest {
     void viewAll_modifyingReturnedMapDoesNotAffectInternalState(){
         tags.addTags("Amazon" , "Remote");
         Map<String , Set<String>> snapShot = tags.viewAll();
-        snapShot.put("FakeCompany" , Set.of("FakeTag"));
-        Map<String , Set<String>> secondSnapshot = tags.viewAll();
-        assertTrue(snapShot.containsKey("FakeCompany"));
-        assertFalse(secondSnapshot.containsKey("FakeCompany"));
+        assertThrows(UnsupportedOperationException.class,
+                () -> snapShot.put("FakeCompany" , Set.of("FakeTag")));
+        assertThrows(UnsupportedOperationException.class,
+                () -> snapShot.get("Amazon").add("onsite"));
     }
 
     @Test

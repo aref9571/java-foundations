@@ -44,8 +44,12 @@ public class ConsoleJobTracker {
             printApplications(applications);
             UUID id = validateId();
             ApplicationStatus newStatus = validateStatus();
-            JobApplication updated = SERVICE.updateStatus(id, newStatus);
-            System.out.println("Status updated successfully to: " + updated.status());
+            try {
+                JobApplication updated = SERVICE.updateStatus(id, newStatus);
+                System.out.println("Status updated successfully to: " + updated.status());
+            } catch (IllegalArgumentException exception) {
+                System.out.println("Could not update application: " + exception.getMessage());
+            }
         }
     }
 
@@ -148,7 +152,7 @@ public class ConsoleJobTracker {
         ApplicationStatus status = null;
         while (status == null) {
             System.out.println("Enter application status (APPLIED, INTERVIEWING, OFFER, REJECTED):");
-            String input = SCANNER.nextLine().trim().toUpperCase();
+            String input = SCANNER.nextLine().trim().toUpperCase(java.util.Locale.ROOT);
             try {
                 status = ApplicationStatus.valueOf(input);
             } catch (IllegalArgumentException e) {

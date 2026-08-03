@@ -24,14 +24,14 @@ public final class Money {
     public Money add(Money other) {
         requireNonNull(other);
         requireSameCurrency(other);
-        long resultAmount = this.amountInCents + other.amountInCents;
+        long resultAmount = Math.addExact(this.amountInCents, other.amountInCents);
         return new Money(resultAmount, this.currency);
     }
 
     public Money subtract(Money other) {
         requireNonNull(other);
         requireSameCurrency(other);
-        long resultAmount = this.amountInCents - other.amountInCents;
+        long resultAmount = Math.subtractExact(this.amountInCents, other.amountInCents);
         return new Money(resultAmount, this.currency);
     }
 

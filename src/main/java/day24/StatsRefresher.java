@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.jar.JarEntry;
 
 public class StatsRefresher {
     public record StatsSnapshot(long activeCount , long finalCount){}
@@ -24,7 +23,10 @@ public class StatsRefresher {
     }
 
     public void start(long initialDelaySeconds , long periodSeconds){
-        scheduler.scheduleAtFixedRate(this::refreshStats , initialDelaySeconds , periodSeconds , TimeUnit.SECONDS);
+        if (initialDelaySeconds < 0 || periodSeconds <= 0) {
+            throw new IllegalArgumentException("initial delay must be non-negative and period must be positive");
+        }
+        scheduler.scheduleAtFixedRate(this::safeRefresh , initialDelaySeconds , periodSeconds , TimeUnit.SECONDS);
     }
 
     private void refreshStats(){
@@ -32,6 +34,14 @@ public class StatsRefresher {
         long active = apps.stream().filter(JobApplication::isActive).count();
         long fin = apps.stream().filter(app -> !app.isActive()).count();
         currentSnapshot = new StatsSnapshot(active,fin);
+    }
+
+    private void safeRefresh() {
+        try {
+            refreshStats();
+        } catch (RuntimeException exception) {
+            System.err.println("[ERROR] [StatsRefresher] Failed to refresh statistics: " + exception.getMessage());
+        }
     }
 
     public StatsSnapshot getCurrentSnapshot(){

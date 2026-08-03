@@ -67,8 +67,9 @@ public final class JobApplication {
         if (isFinalStatus(this.status)){
             throw new InvalidApplicationStateException("Cannot change status: application is already in final state " + this.status);
         }
-        if (this.status == ApplicationStatus.APPLIED && newStatus == ApplicationStatus.OFFER){
-            throw new InvalidApplicationStateException("Cannot move directly from APPLIED to OFFER - must go through INTERVIEWING");
+        if (!isAllowedTransition(this.status, newStatus)) {
+            throw new InvalidApplicationStateException(
+                    "Cannot move from " + this.status + " to " + newStatus);
         }
         return new JobApplication(company , role , newStatus , appliedDate , expectedSalary , id);
     }
@@ -130,5 +131,13 @@ public final class JobApplication {
 
     private static boolean isFinalStatus(ApplicationStatus status){
         return status == ApplicationStatus.OFFER || status == ApplicationStatus.REJECTED;
+    }
+
+    private static boolean isAllowedTransition(ApplicationStatus currentStatus,
+                                               ApplicationStatus newStatus) {
+        return currentStatus == ApplicationStatus.APPLIED
+                && (newStatus == ApplicationStatus.INTERVIEWING || newStatus == ApplicationStatus.REJECTED)
+                || currentStatus == ApplicationStatus.INTERVIEWING
+                && (newStatus == ApplicationStatus.OFFER || newStatus == ApplicationStatus.REJECTED);
     }
 }

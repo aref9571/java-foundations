@@ -6,7 +6,7 @@ public class ApplicationTags {
     private final Map<String , Set<String> > tagsByCompany = new HashMap<>();
     public void addTags(String company , String tag){
         addTagValidation(company,tag);
-        String normalizedTag = tag.toLowerCase();
+        String normalizedTag = tag.toLowerCase(Locale.ROOT);
         tagsByCompany.computeIfAbsent(company, c -> new HashSet<>()).add(normalizedTag);
 
     }
@@ -19,12 +19,14 @@ public class ApplicationTags {
         if (tag == null){
             return false;
         }
-        String normalizedTag = tag.toLowerCase();
+        String normalizedTag = tag.toLowerCase(Locale.ROOT);
         return getTags(company).contains(normalizedTag);
     }
 
     public Map<String  , Set<String>> viewAll(){
-        return new HashMap<>(tagsByCompany);
+        Map<String, Set<String>> copy = new HashMap<>();
+        tagsByCompany.forEach((company, tags) -> copy.put(company, Set.copyOf(tags)));
+        return Map.copyOf(copy);
     }
 
 

@@ -53,5 +53,15 @@ class FileApplicationStoreTest {
         assertTrue(loaded.isEmpty());
     }
 
+    @Test
+    void saveAll_createsMissingParentDirectories(){
+        Path file = tempDir.resolve("nested").resolve("applications.txt");
+        FileApplicationStore store = new FileApplicationStore(file);
+
+        store.saveAll(List.of(JobApplicationBuilder.aDefaultApplication().build()));
+
+        assertTrue(Files.exists(file));
+    }
+
 
 }

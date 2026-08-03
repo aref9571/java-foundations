@@ -23,12 +23,12 @@ public class JobTrackerCli {
         existing.forEach(repository::add);
 
         Money expectedSalary = new Money(5000L , "EUR");
-        JobApplication created = service.applyForJob(
-                "Microsoft",
-                "Backend",
-                LocalDate.now(),
-                expectedSalary);
-        service.moveToInterviewing(created.id());
+        JobApplication created = repository.findFirstByCompany("Microsoft")
+                .orElseGet(() -> service.applyForJob(
+                        "Microsoft", "Backend", LocalDate.now(), expectedSalary));
+        if (created.status() == ApplicationStatus.APPLIED) {
+            service.moveToInterviewing(created.id());
+        }
 
         fileStore.saveAll(repository.findAll());
 

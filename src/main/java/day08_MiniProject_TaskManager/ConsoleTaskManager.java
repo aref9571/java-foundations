@@ -80,8 +80,12 @@ public class ConsoleTaskManager {
             printTasks(allTasks);
             UUID id = validateId();
             TaskStatus newStatus = validateStatus();
-            Task updated = SERVICE.updateStatus(id, newStatus);
-            System.out.println("Task \"" + updated.title() + "\" was successfully updated to " + updated.status() + ".");
+            try {
+                Task updated = SERVICE.updateStatus(id, newStatus);
+                System.out.println("Task \"" + updated.title() + "\" was successfully updated to " + updated.status() + ".");
+            } catch (IllegalArgumentException exception) {
+                System.out.println("Could not update task: " + exception.getMessage());
+            }
         }
     }
 
@@ -92,8 +96,12 @@ public class ConsoleTaskManager {
         } else {
             printTasks(allTasks);
             UUID id = validateId();
-            SERVICE.deleteTask(id);
-            System.out.println("Task with ID " + id + " was successfully deleted.");
+            try {
+                SERVICE.deleteTask(id);
+                System.out.println("Task with ID " + id + " was successfully deleted.");
+            } catch (IllegalArgumentException exception) {
+                System.out.println("Could not delete task: " + exception.getMessage());
+            }
         }
     }
 
@@ -126,7 +134,7 @@ public class ConsoleTaskManager {
     private static TaskStatus validateStatus() {
         while (true) {
             System.out.println("Enter the status of the task " + Arrays.toString(TaskStatus.values()) + ": ");
-            String status = SCANNER.nextLine().trim().toUpperCase();
+            String status = SCANNER.nextLine().trim().toUpperCase(java.util.Locale.ROOT);
             try {
                 return TaskStatus.valueOf(status);
             } catch (IllegalArgumentException e) {

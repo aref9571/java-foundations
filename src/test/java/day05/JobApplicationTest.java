@@ -104,5 +104,17 @@ class JobApplicationTest {
         assertTrue(ex.getMessage().contains("REJECTED"));
     }
 
+    @Test
+    void interviewingCannotMoveBackToAppliedOrRemainInterviewing() {
+        JobApplication interviewing = JobApplicationBuilder.aDefaultApplication()
+                .withStatus(ApplicationStatus.INTERVIEWING)
+                .build();
+
+        assertThrows(InvalidApplicationStateException.class,
+                () -> interviewing.withStatus(ApplicationStatus.APPLIED));
+        assertThrows(InvalidApplicationStateException.class,
+                () -> interviewing.withStatus(ApplicationStatus.INTERVIEWING));
+    }
+
 
 }

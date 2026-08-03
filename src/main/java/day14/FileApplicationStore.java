@@ -17,13 +17,28 @@ public class FileApplicationStore {
     }
 
     public void saveAll(List<JobApplication> applications){
+        Objects.requireNonNull(applications , "Applications must not be null");
         System.out.println("[INFO] [FileApplicationStore] Saving applications | " +
                 "file=" + file +
                 ", count=" + applications.size());
         List<String> lines = applications.stream().map(JobApplicationCsvConverter::toLine).toList();
 
         try {
-            Files.write(file,lines, StandardCharsets.UTF_8);
+            Path target = file.toAbsolutePath();
+            Path parent = target.getParent();
+            Files.createDirectories(parent);
+            Path temporary = Files.createTempFile(parent, target.getFileName().toString(), ".tmp");
+            try {
+                Files.write(temporary, lines, StandardCharsets.UTF_8);
+                try {
+                    Files.move(temporary, target, StandardCopyOption.ATOMIC_MOVE,
+                            StandardCopyOption.REPLACE_EXISTING);
+                } catch (AtomicMoveNotSupportedException ignored) {
+                    Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+            } finally {
+                Files.deleteIfExists(temporary);
+            }
         }
         catch (IOException e){
             throw new RuntimeException("Failed to write applications to file " + file , e);

@@ -7,36 +7,35 @@ public final class ApplicationQueries {
     private ApplicationQueries(){}
 
     public static List<JobApplication> filterByTitleKeyword(List<JobApplication> applications , String keyword){
-        if (applications == null){
-            return Collections.emptyList();
-        }
-        if (keyword == null || keyword.isBlank()){
-            throw new IllegalArgumentException("Keyword must be non blank");
-        }
-        String normalized = keyword.toLowerCase(Locale.ROOT);
+        List<JobApplication> apps = safeApplications(applications);
+        String normalized = normalizeNonBlank(keyword , "keyword");
 
-        return applications.stream().filter(app -> app.role() != null && app.role().toLowerCase(Locale.ROOT).contains(normalized)).toList();
+        return apps.stream().filter(app -> app.role() != null && app.role().toLowerCase(Locale.ROOT).contains(normalized)).toList();
 
     }
 
     public static List<JobApplication> filterAppliedAfter(List<JobApplication> applications , LocalDate date){
-        if (applications == null){
-            return Collections.emptyList();
-        }
+        List<JobApplication> apps = safeApplications(applications);
         if (date == null){
             throw new IllegalArgumentException("Date must not be null");
         }
-        return applications.stream().filter(app -> app.appliedDate().isAfter(date)).toList();
+        return apps.stream().filter(app -> app.appliedDate().isAfter(date)).toList();
     }
 
     public static List<JobApplication> filterByCompanyPrefix(List<JobApplication> applications , String prefix){
-        if (applications == null){
-            return Collections.emptyList();
+        List<JobApplication> apps = safeApplications(applications);
+        String normalized = normalizeNonBlank(prefix , "prefix");
+        return apps.stream().filter(app ->app.company() != null && app.company().toLowerCase(Locale.ROOT).startsWith(normalized)).toList();
+    }
+
+    private static List<JobApplication> safeApplications(List<JobApplication> applications){
+        return applications == null ? Collections.emptyList() : applications;
+    }
+
+    private static String normalizeNonBlank(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " must not be blank");
         }
-        if (prefix == null || prefix.isBlank()){
-            throw new IllegalArgumentException("Prefix must be non blank");
-        }
-        String normalize = prefix.toLowerCase(Locale.ROOT);
-        return applications.stream().filter(app -> app.company().toLowerCase(Locale.ROOT).startsWith(normalize)).toList();
+        return value.toLowerCase(Locale.ROOT);
     }
 }

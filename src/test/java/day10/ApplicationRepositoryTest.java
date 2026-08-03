@@ -60,7 +60,7 @@ class ApplicationRepositoryTest {
     }
     @Test
     void findByStatus_nullStatus_throwsException(){
-        assertThrows(IllegalArgumentException.class , () -> repository.findByStatus(null));
+        assertThrows(NullPointerException.class , () -> repository.findByStatus(null));
     }
     @Test
     void countActive_returnsNumberOfActiveApplications(){
@@ -111,5 +111,28 @@ class ApplicationRepositoryTest {
     @Test
     void findFirstByCompany_throwsIllegalArgumentExceptionWhenCompanyIsBlank(){
         assertThrows(IllegalArgumentException.class,() -> repository.findFirstByCompany(" "));
+    }
+
+    @Test
+    void findByCompany_matchesRegardlessOfCompanyCase(){
+        JobApplication application = JobApplicationBuilder.aDefaultApplication()
+                .withCompany("Amazon")
+                .build();
+        repository.add(application);
+
+        assertEquals(List.of(application), repository.findByCompany(" amazon "));
+    }
+
+    @Test
+    void add_rejectsDuplicateIds(){
+        UUID id = UUID.randomUUID();
+        repository.add(JobApplicationBuilder.aDefaultApplication().withId(id).build());
+        JobApplication duplicateId = JobApplicationBuilder.aDefaultApplication()
+                .withCompany("Other")
+                .withRole("Other role")
+                .withId(id)
+                .build();
+
+        assertThrows(day11.DuplicateApplicationException.class, () -> repository.add(duplicateId));
     }
 }

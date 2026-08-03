@@ -31,24 +31,19 @@ public class ApplicationService {
         return application;
     }
     public List<JobApplication> findByCompany(String company){
-        if (company == null || company.isBlank()){
-            throw new IllegalArgumentException("company must be non blank");
-        }
+        requireNonBlank(company , "company");
         return repository.findByCompany(company);
     }
     public Optional<JobApplication> findApplicationByCompany(String company){
+        requireNonBlank(company, "company");
         return repository.findFirstByCompany(company);
     }
     public List<JobApplication> findByStatus(ApplicationStatus status){
-        if (status == null){
-            throw new IllegalArgumentException("status must not be null");
-        }
+        requireNonNull(status , "status");
         return repository.findByStatus(status);
     }
     public JobApplication moveToInterviewing(UUID id){
-        if (id == null){
-            throw new IllegalArgumentException("id must not be null");
-        }
+        requireNonNull(id , "id");
         System.out.println("[DEBUG] [ApplicationService] Moving to INTERVIEWING | id=" + id);
         JobApplication updated = repository.updateStatus(id , ApplicationStatus.INTERVIEWING);
         System.out.println("[INFO] [ApplicationService] Moved to INTERVIEWING | id=" + id +
@@ -56,15 +51,11 @@ public class ApplicationService {
         return updated;
     }
     public JobApplication reject(UUID id){
-        if (id == null){
-            throw new IllegalArgumentException("id must not be null");
-        }
+       requireNonNull(id , "id");
         return repository.updateStatus(id , ApplicationStatus.REJECTED);
     }
     public JobApplication acceptOffer(UUID id){
-        if (id == null){
-            throw new IllegalArgumentException("id must not be null");
-        }
+        requireNonNull(id , "id");
 
         return repository.updateStatus(id , ApplicationStatus.OFFER);
     }
@@ -90,22 +81,25 @@ public class ApplicationService {
 
 
     private void validateApplicationInput(String company , String role , LocalDate appliedDate , Money expectedSalary){
-        if (company == null || company.isBlank()){
-            throw new IllegalArgumentException("company must be non blank");
-        }
-        if (role == null || role.isBlank()){
-            throw new IllegalArgumentException("role must be non blank");
-        }
-        if (appliedDate == null){
-            throw new IllegalArgumentException("appliedDate must not be null");
-        }
+        requireNonBlank(company , "company");
+        requireNonBlank(role , "role");
+        requireNonNull(appliedDate , "appliedDate");
         if (appliedDate.isAfter(LocalDate.now())){
             throw new IllegalArgumentException("appliedDate must not be in the future");
         }
-        if (expectedSalary == null){
-            throw new IllegalArgumentException("expectedSalary must not be null");
-        }
+        requireNonNull(expectedSalary , "expectedSalary");
     }
 
 
+    private static void requireNonNull(Object value, String fieldName){
+        if (value == null){
+            throw new IllegalArgumentException(fieldName + " must be not be null");
+        }
+    }
+
+    private static void requireNonBlank(String s , String fieldName){
+        if (s == null || s.isBlank()){
+            throw new IllegalArgumentException(fieldName +  " must be non blank");
+        }
+    }
 }
