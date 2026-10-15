@@ -19,8 +19,19 @@ public class ConsoleLogger implements SimpleLogger {
     }
 
     private String format(String template , Object... args){
-        String printTemplate = template.replace("{}" , "%s");
-        return String.format(printTemplate, args);
+        StringBuilder result = new StringBuilder();
+        int argumentIndex = 0;
+        int position = 0;
+        int placeholder = template.indexOf("{}");
+        while (placeholder != -1 && argumentIndex < args.length) {
+            result.append(template, position, placeholder);
+            result.append(args[argumentIndex]);
+            argumentIndex++;
+            position = placeholder + 2;
+            placeholder = template.indexOf("{}", position);
+        }
+        result.append(template.substring(position));
+        return result.toString();
     }
 
 
