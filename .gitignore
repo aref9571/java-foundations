@@ -4,8 +4,12 @@ out/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .kotlin
+Debug.csv
+jobtracker-data.txt
+applications.csv
 
 ### IntelliJ IDEA ###
+.idea/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
