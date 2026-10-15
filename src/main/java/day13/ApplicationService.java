@@ -93,7 +93,7 @@ public class ApplicationService {
 
     private static void requireNonNull(Object value, String fieldName){
         if (value == null){
-            throw new IllegalArgumentException(fieldName + " must be not be null");
+            throw new IllegalArgumentException(fieldName + " must not be null");
         }
     }
 

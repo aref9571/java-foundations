@@ -31,7 +31,7 @@ public class AnalyticsRefresher {
         try {
             AnalyticsSnapshot snapshot = analyticsService.computeSnapshot();
             currentSnapshot = snapshot;
-            log.info("analytics snapshot refreshed: toal={} actice={} final={}",
+            log.info("analytics snapshot refreshed: total={} active={} final={}",
                     snapshot.totalApplications() , snapshot.activeApplications() , snapshot.finalApplications());
         } catch (Exception e){
             log.error("Failed to refresh analytics snapshot" , e);

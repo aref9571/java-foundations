@@ -193,14 +193,14 @@ public class ConsoleJobTracker {
     }
     private static long amountValidation() {
         while (true) {
-            System.out.println("Enter the amount of the expected salary: ");
+            System.out.println("Enter the expected salary in cents: ");
             if (SCANNER.hasNextLong()) {
                 long amount = SCANNER.nextLong();
                 SCANNER.nextLine();
                 if (amount > 0) {
                     return amount;
                 }
-                System.out.println("The amount must not be negative.");
+                System.out.println("The amount must be positive.");
             } else {
                 System.out.println("invalid input for the amount.");
                 SCANNER.nextLine();

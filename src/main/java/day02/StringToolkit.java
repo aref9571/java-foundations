@@ -20,10 +20,6 @@ public final class StringToolkit {
 
     public static String normalizeEmail(String email){
         String raw = requireNonBlank(email , "email");
-        String normalized = raw.trim().toLowerCase(Locale.ROOT);
-        if (normalized.isEmpty()){
-            throw new IllegalArgumentException("email must not be blank");
-        }
-        return normalized;
+        return raw.trim().toLowerCase(Locale.ROOT);
     }
 }
