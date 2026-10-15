@@ -1,8 +1,8 @@
 package day03;
 
 public class ApplicationRules {
-    public boolean isStrongCandidate(int yearsOfExperience , boolean knowJava , boolean knowSpringBoot){
-        return hasRequiredExperienceForStrongCandidate(yearsOfExperience , knowJava , knowSpringBoot) || knowsRequiredTechnologiesForStrongCandidate(yearsOfExperience , knowJava);
+    public boolean isStrongCandidate(int yearsOfExperience , boolean knowsJava , boolean knowsSpringBoot){
+        return knowsRequiredTechnologiesForStrongCandidate(yearsOfExperience , knowsJava , knowsSpringBoot) || hasRequiredExperienceForStrongCandidate(yearsOfExperience , knowsJava);
     }
     public boolean shouldSendFollowUpEmail(boolean alreadySent , int daysSinceLastContact){
         if (alreadySent){
@@ -26,11 +26,11 @@ public class ApplicationRules {
     private boolean hasWaitedLongEnoughForFollowUp(int daysSinceLastContact){
         return daysSinceLastContact >=7;
     }
-    private boolean hasRequiredExperienceForStrongCandidate(int yearsOfExperience, boolean knowJava , boolean knowSpringBoot){
-        return yearsOfExperience >= 1 && knowJava && knowSpringBoot;
+    private boolean knowsRequiredTechnologiesForStrongCandidate(int yearsOfExperience, boolean knowsJava , boolean knowsSpringBoot){
+        return yearsOfExperience >= 1 && knowsJava && knowsSpringBoot;
     }
-    private boolean knowsRequiredTechnologiesForStrongCandidate(int yearsOfExperience ,boolean knowJava){
-        return yearsOfExperience >=2 && knowJava;
+    private boolean hasRequiredExperienceForStrongCandidate(int yearsOfExperience ,boolean knowsJava){
+        return yearsOfExperience >=2 && knowsJava;
     }
 
 }

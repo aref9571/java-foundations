@@ -30,7 +30,7 @@ class StringToolkitTest {
         String a = null;
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class ,
-                () -> StringToolkit.requireNoneBlank(a , "username")
+                () -> StringToolkit.requireNonBlank(a , "username")
         );
         assertEquals("username must not be blank" , ex.getMessage());
     }
@@ -40,14 +40,14 @@ class StringToolkitTest {
         String s = "   ";
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> StringToolkit.requireNoneBlank(s, "username")
+                () -> StringToolkit.requireNonBlank(s, "username")
         );
         assertEquals("username must not be blank", ex.getMessage());
     }
     @Test
     void requireNonBlank_valid_returnsOriginalString() {
         String s = "Aref";
-        String result = StringToolkit.requireNoneBlank(s , "name");
+        String result = StringToolkit.requireNonBlank(s , "name");
         assertSame("Aref" , result);
 
     } @Test

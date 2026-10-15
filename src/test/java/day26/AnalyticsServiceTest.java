@@ -25,7 +25,7 @@ public class AnalyticsServiceTest {
 
     @Test
     void computeSnapshotShouldReturnCorrectAggregates(){
-        AnalyticsSnapshot snapshot = service.computeSnapShot();
+        AnalyticsSnapshot snapshot = service.computeSnapshot();
 
         assertEquals(4 , snapshot.totalApplications());
         assertEquals(3 , snapshot.activeApplications());
@@ -36,7 +36,7 @@ public class AnalyticsServiceTest {
 
     @Test
     void computeSnapshot_ordersTiedCompaniesAlphabetically(){
-        AnalyticsSnapshot snapshot = service.computeSnapShot();
+        AnalyticsSnapshot snapshot = service.computeSnapshot();
 
         assertEquals(List.of("amazon", "bmw", "google"), snapshot.topCompanies());
     }

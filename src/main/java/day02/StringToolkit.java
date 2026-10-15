@@ -8,7 +8,7 @@ public final class StringToolkit {
         return a == null || a.trim().isEmpty();
     }
 
-    public static String requireNoneBlank(String s , String fieldName) {
+    public static String requireNonBlank(String s , String fieldName) {
         if (isBlank(fieldName)) {
             throw new IllegalArgumentException("fieldName must not be blank");
         }
@@ -19,7 +19,7 @@ public final class StringToolkit {
     }
 
     public static String normalizeEmail(String email){
-        String raw = requireNoneBlank(email , "email");
+        String raw = requireNonBlank(email , "email");
         String normalized = raw.trim().toLowerCase(Locale.ROOT);
         if (normalized.isEmpty()){
             throw new IllegalArgumentException("email must not be blank");

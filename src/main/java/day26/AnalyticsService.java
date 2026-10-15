@@ -14,7 +14,7 @@ public class AnalyticsService {
         this.repository = Objects.requireNonNull(repository , "repository must not be null");
     }
 
-    public AnalyticsSnapshot computeSnapShot(){
+    public AnalyticsSnapshot computeSnapshot(){
         List<JobApplication> apps = repository.findAll();
         long total = apps.size();
         long active = apps.stream().filter(JobApplication::isActive).count();

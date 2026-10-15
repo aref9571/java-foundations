@@ -207,13 +207,13 @@ public class ConsoleJobTracker {
             }
         }
     }
-    private static String stringValidation(String prompt, String filedName) {
+    private static String stringValidation(String prompt, String fieldName) {
         String st = null;
         while (st == null) {
             System.out.println(prompt);
             String input = SCANNER.nextLine();
             if (input.isBlank()) {
-                System.out.println(filedName + " must be non-blank");
+                System.out.println(fieldName + " must be non-blank");
             } else {
                 st = input;
             }

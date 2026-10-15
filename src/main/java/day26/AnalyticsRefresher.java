@@ -29,7 +29,7 @@ public class AnalyticsRefresher {
 
     private void safeRefresh(){
         try {
-            AnalyticsSnapshot snapshot = analyticsService.computeSnapShot();
+            AnalyticsSnapshot snapshot = analyticsService.computeSnapshot();
             currentSnapshot = snapshot;
             log.info("analytics snapshot refreshed: toal={} actice={} final={}",
                     snapshot.totalApplications() , snapshot.activeApplications() , snapshot.finalApplications());
