@@ -45,7 +45,7 @@ class JobApplicationTest {
 
     @Test
     void futureAppliedDateThrows() {
-        LocalDate appliedDate = LocalDate.of(2027 , 1 , 1);
+        LocalDate appliedDate = LocalDate.now().plusDays(1);
         assertThrows(IllegalArgumentException.class, () ->
                 JobApplicationBuilder.aDefaultApplication().withAppliedDate(appliedDate).build());
     }
