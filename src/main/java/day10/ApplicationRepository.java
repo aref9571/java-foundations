@@ -24,7 +24,7 @@ public class ApplicationRepository {
         if (byId.containsKey(app.id())) {
             throw new DuplicateApplicationException("Application id already exists: " + app.id());
         }
-        boolean alreadyExist = applications.stream().anyMatch(existing -> existing.company().equalsIgnoreCase(app.company()) && existing.role().equalsIgnoreCase(app.role()));
+        boolean alreadyExist = applications.stream().anyMatch(existing -> isSameCompanyAndRole(existing, app));
         if (alreadyExist){
             throw new DuplicateApplicationException("Application for " + app.role() + " at " + app.company() + " already exists");
         }
@@ -44,7 +44,8 @@ public class ApplicationRepository {
     }
     public synchronized Optional<JobApplication> findFirstByCompany(String company){
         requireNonBlank(company , "company");
-        return applications.stream().filter(app -> app.company().equalsIgnoreCase(company)).findFirst();
+        String normalizedCompany = normalizeCompany(company);
+        return applications.stream().filter(app -> normalizeCompany(app.company()).equals(normalizedCompany)).findFirst();
     }
     public synchronized List<JobApplication> findByStatus(ApplicationStatus status){
         requireNonNull(status , "status");
@@ -109,6 +110,11 @@ public class ApplicationRepository {
 
     private static String normalizeCompany(String company) {
         return company.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private static boolean isSameCompanyAndRole(JobApplication first, JobApplication second) {
+        return normalizeCompany(first.company()).equals(normalizeCompany(second.company()))
+                && first.role().trim().equalsIgnoreCase(second.role().trim());
     }
 
     private static void requireNonBlank(String s , String fieldName){

@@ -135,4 +135,28 @@ class ApplicationRepositoryTest {
 
         assertThrows(day11.DuplicateApplicationException.class, () -> repository.add(duplicateId));
     }
+
+    @Test
+    void add_rejectsDuplicateCompanyAndRole_ignoringCaseAndSurroundingSpaces(){
+        repository.add(JobApplicationBuilder.aDefaultApplication().withCompany("Google").withRole("Backend").build());
+        JobApplication duplicate = JobApplicationBuilder.aDefaultApplication()
+                .withCompany(" google ")
+                .withRole("BACKEND ")
+                .build();
+
+        assertThrows(day11.DuplicateApplicationException.class, () -> repository.add(duplicate));
+        assertEquals(1, repository.findAll().size());
+    }
+
+    @Test
+    void findFirstByCompany_matchesRegardlessOfSurroundingSpaces(){
+        JobApplication application = JobApplicationBuilder.aDefaultApplication()
+                .withCompany("Amazon")
+                .build();
+        repository.add(application);
+
+        Optional<JobApplication> result = repository.findFirstByCompany(" amazon ");
+
+        assertEquals(Optional.of(application), result);
+    }
 }
