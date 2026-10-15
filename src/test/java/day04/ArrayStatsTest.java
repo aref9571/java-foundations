@@ -156,4 +156,21 @@ class ArrayStatsTest {
         assertThrows(IllegalArgumentException.class,
                 () -> ArrayStats.average(new int[0]));
     }
+
+    @Test
+    void average_does_not_overflow_for_large_values() {
+        int[] values = {Integer.MAX_VALUE, Integer.MAX_VALUE};
+
+        double result = ArrayStats.average(values);
+
+        assertEquals(Integer.MAX_VALUE, result);
+    }
+
+    @Test
+    void sum_throws_exception_when_result_overflows_int() {
+        int[] values = {Integer.MAX_VALUE, 1};
+
+        assertThrows(ArithmeticException.class,
+                () -> ArrayStats.sum(values));
+    }
 }

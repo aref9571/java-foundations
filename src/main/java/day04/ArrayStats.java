@@ -35,14 +35,17 @@ public final class ArrayStats {
         validateNotEmpty(values);
         int sum = 0;
         for (int i : values){
-            sum += i;
+            sum = Math.addExact(sum, i);
         }
         return sum;
     }
 
     public static double average(int[] values){
         validateNotEmpty(values);
-        int sum = sum(values);
+        long sum = 0;
+        for (int value : values){
+            sum += value;
+        }
         return (double) sum / values.length;
     }
 }
