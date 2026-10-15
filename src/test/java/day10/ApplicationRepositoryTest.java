@@ -60,7 +60,11 @@ class ApplicationRepositoryTest {
     }
     @Test
     void findByStatus_nullStatus_throwsException(){
-        assertThrows(NullPointerException.class , () -> repository.findByStatus(null));
+        assertThrows(IllegalArgumentException.class , () -> repository.findByStatus(null));
+    }
+    @Test
+    void add_nullApplication_throwsException(){
+        assertThrows(IllegalArgumentException.class , () -> repository.add(null));
     }
     @Test
     void countActive_returnsNumberOfActiveApplications(){

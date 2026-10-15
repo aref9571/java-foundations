@@ -97,7 +97,9 @@ public class ApplicationRepository {
 
 
     private static void requireNonNull(Object value, String fieldName){
-        Objects.requireNonNull(value , fieldName + " must not be null");
+        if (value == null){
+            throw new IllegalArgumentException(fieldName + " must not be null");
+        }
     }
     private static void idNullCheck(UUID value){
         if (value == null){
