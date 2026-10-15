@@ -22,12 +22,15 @@ class StatsRefresherTest {
     @Test
     void refresherUpdatesSnapshotOverTime() throws InterruptedException {
         StatsRefresher refresher = new StatsRefresher(repository);
-        refresher.start(0,1);
-        Thread.sleep(1500);
-        StatsRefresher.StatsSnapshot snapshot = refresher.getCurrentSnapshot();
-        assertEquals(3 , snapshot.activeCount());
-        assertEquals(1 , snapshot.finalCount());
-        refresher.shutdown();
+        try {
+            refresher.start(0,1);
+            Thread.sleep(1500);
+            StatsRefresher.StatsSnapshot snapshot = refresher.getCurrentSnapshot();
+            assertEquals(3 , snapshot.activeCount());
+            assertEquals(1 , snapshot.finalCount());
+        } finally {
+            refresher.shutdown();
+        }
     }
 
     @Test
@@ -43,10 +46,14 @@ class StatsRefresherTest {
 
     }
 
+    @Test
+    void start_rejectsInvalidDelays(){
+        StatsRefresher refresher = new StatsRefresher(repository);
 
-
-
-
+        assertThrows(IllegalArgumentException.class , () -> refresher.start(-1 , 1));
+        assertThrows(IllegalArgumentException.class , () -> refresher.start(0 , 0));
+        refresher.shutdown();
+    }
 
     private void seedData(ApplicationRepository repository) {
         LocalDate today = LocalDate.now();
