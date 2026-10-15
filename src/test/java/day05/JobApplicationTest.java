@@ -37,8 +37,6 @@ class JobApplicationTest {
 
     @Test
     void blankRoleThrows() {
-        UUID id = UUID.randomUUID();
-        Money expectedSalary = new Money(5_000_00L, "EUR");
         assertThrows(IllegalArgumentException.class, () ->
                 JobApplicationBuilder.aDefaultApplication().withRole(" ").build());
     }

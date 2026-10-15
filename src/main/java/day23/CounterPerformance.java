@@ -29,8 +29,7 @@ public class CounterPerformance {
     }
 
     public static long runCounterTest(Runnable incrementTask,
-                                      int threadCount,
-                                      int iterationsPerThread) throws InterruptedException {
+                                      int threadCount) throws InterruptedException {
 
         Thread[] threads = new Thread[threadCount];
         long start = System.nanoTime();
@@ -56,7 +55,7 @@ public class CounterPerformance {
                 counter.increment();
             }
         };
-        long duration = runCounterTest(task, threadCount, iterationsPerThread);
+        long duration = runCounterTest(task, threadCount);
         System.out.println("Atomic: value=" + counter.get() + ", time=" + duration);
         return duration;
     }
@@ -69,7 +68,7 @@ public class CounterPerformance {
                 counter.increment();
             }
         };
-        long duration = runCounterTest(task, threadCount, iterationsPerThread);
+        long duration = runCounterTest(task, threadCount);
         System.out.println("Synchronized: value=" + counter.get() + ", time=" + duration);
         return duration;
     }

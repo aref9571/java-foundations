@@ -4,12 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import day05.ApplicationStatus;
 import day05.JobApplication;
 import day05.JobApplicationBuilder;
-import day05.Money;
 import day10.ApplicationRepository;
 import org.junit.jupiter.api.*;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 class ApplicationRepositoryExceptionTest {

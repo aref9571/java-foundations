@@ -1,14 +1,11 @@
 package day10;
-import day05.ApplicationStatus;
 import day05.JobApplication;
 import day05.JobApplicationBuilder;
-import day05.Money;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 class ApplicationQueriesTest {

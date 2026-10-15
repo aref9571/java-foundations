@@ -2,14 +2,11 @@ package day09;
 import day05.ApplicationStatus;
 import day05.JobApplication;
 import day05.JobApplicationBuilder;
-import day05.Money;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 

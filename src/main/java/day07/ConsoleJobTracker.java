@@ -8,7 +8,6 @@ import day11.ApplicationException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -117,23 +116,6 @@ public class ConsoleJobTracker {
         System.out.println("5 - Update application status");
         System.out.println("0 - Exit");
         System.out.print("Choose an option: ");
-    }
-    private static int validateAppNumber(List<JobApplication> applications) {
-        while (true) {
-            System.out.println("Enter the application number: ");
-            if (SCANNER.hasNextInt()) {
-                int appNumber = SCANNER.nextInt();
-                SCANNER.nextLine();
-                if (appNumber >= 1 && appNumber <= applications.size()) {
-                    return appNumber;
-                } else {
-                    System.out.println("Invalid application number. Please choose between 1 and " + applications.size());
-                }
-            } else {
-                System.out.println("invalid input for appNumber.");
-                SCANNER.nextLine();
-            }
-        }
     }
     private static void printApplications(List<JobApplication> applications) {
         int count = 1;

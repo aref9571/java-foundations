@@ -2,7 +2,6 @@ package day24;
 
 import org.junit.jupiter.api.Test;
 
-import static day23.CounterPerformance.runCounterTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RequestCounterTest {

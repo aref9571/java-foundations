@@ -14,10 +14,6 @@ public class ExecutorExample {
         System.out.println("Main thread done.");
     }
 
-
-
-
-
     public static int runParallelSum(List<Integer> numbers)
             throws InterruptedException, ExecutionException {
         ExecutorService executor = Executors.newFixedThreadPool(4);

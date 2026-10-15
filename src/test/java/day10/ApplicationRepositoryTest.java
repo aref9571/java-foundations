@@ -2,11 +2,9 @@ package day10;
 import day05.ApplicationStatus;
 import day05.JobApplication;
 import day05.JobApplicationBuilder;
-import day05.Money;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
-import java.time.LocalDate;
 import java.util.*;
 class ApplicationRepositoryTest {
     private ApplicationRepository repository;

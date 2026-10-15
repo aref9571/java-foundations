@@ -28,9 +28,8 @@ public class Day15DebugScenario {
         List<JobApplication> applications = fileStore.loadAll();
         fileStore.saveAll(applications);
 
-        List<JobApplication> loaded = fileStore.loadAll();
+        fileStore.loadAll();
 
-        JobApplication firstLoaded = loaded.getFirst();
         service.moveToInterviewing(app1.id());
         repository.updateStatus(app1.id() , ApplicationStatus.OFFER);
 
