@@ -3,6 +3,7 @@ package day07;
 import day05.ApplicationStatus;
 import day05.JobApplication;
 import day05.Money;
+import day11.ApplicationException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -47,7 +48,7 @@ public class ConsoleJobTracker {
             try {
                 JobApplication updated = SERVICE.updateStatus(id, newStatus);
                 System.out.println("Status updated successfully to: " + updated.status());
-            } catch (IllegalArgumentException exception) {
+            } catch (IllegalArgumentException | ApplicationException exception) {
                 System.out.println("Could not update application: " + exception.getMessage());
             }
         }
@@ -170,6 +171,11 @@ public class ConsoleJobTracker {
                 appliedDate = LocalDate.parse(input);
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid applied date input. Please use format YYYY-MM-DD.");
+                continue;
+            }
+            if (appliedDate.isAfter(LocalDate.now())) {
+                System.out.println("The applied date must not be in the future.");
+                appliedDate = null;
             }
         }
         return appliedDate;
