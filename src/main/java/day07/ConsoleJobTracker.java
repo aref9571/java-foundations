@@ -182,8 +182,14 @@ public class ConsoleJobTracker {
     }
     private static Money validateExpectedSalary() {
         long amount = amountValidation();
-        String currency = stringValidation("Enter the currency of expected salary:  ", "currency");
-        return new Money(amount, currency);
+        while (true) {
+            String currency = stringValidation("Enter the currency of expected salary (for example EUR): ", "currency");
+            try {
+                return new Money(amount, currency);
+            } catch (IllegalArgumentException exception) {
+                System.out.println(exception.getMessage());
+            }
+        }
     }
     private static long amountValidation() {
         while (true) {

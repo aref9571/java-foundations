@@ -75,11 +75,11 @@ class JobApplicationCsvConverterTest {
     }
 
     @Test
-    void toLineAndFromLine_roundTrip_withEscapedFieldsAndNullCurrencyLiteral() {
+    void toLineAndFromLine_roundTrip_withEscapedFields() {
         JobApplication application = JobApplicationBuilder.aDefaultApplication()
                 .withCompany("ACME|Europe\\Platform\nTeam")
                 .withRole("Backend|Engineer")
-                .withExpectedSalary(new Money(750_000, "null"))
+                .withExpectedSalary(new Money(750_000, "EUR"))
                 .build();
 
         assertEquals(application, JobApplicationCsvConverter.fromLine(
@@ -89,6 +89,22 @@ class JobApplicationCsvConverterTest {
     @Test
     void fromLine_rejectsPartiallyAbsentSalary() {
         String line = UUID.randomUUID() + "|Company|Role|APPLIED|2026-04-11|~|EUR";
+
+        assertThrows(IllegalArgumentException.class, () -> JobApplicationCsvConverter.fromLine(line));
+    }
+
+    @Test
+    void fromLine_readsLegacyNullSalaryAsAbsent() {
+        String line = UUID.randomUUID() + "|Company|Role|APPLIED|2026-04-11|null|null";
+
+        JobApplication loaded = JobApplicationCsvConverter.fromLine(line);
+
+        assertNull(loaded.expectedSalary());
+    }
+
+    @Test
+    void fromLine_throws_whenCurrencyIsUnknown() {
+        String line = UUID.randomUUID() + "|Company|Role|APPLIED|2026-04-11|7500000|ABC";
 
         assertThrows(IllegalArgumentException.class, () -> JobApplicationCsvConverter.fromLine(line));
     }

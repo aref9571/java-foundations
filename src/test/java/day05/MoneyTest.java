@@ -44,4 +44,42 @@ class MoneyTest {
 
         assertThrows(ArithmeticException.class, () -> maximum.add(oneCent));
     }
+
+    @Test
+    void subtractWithSameCurrencySubtractsAmounts() {
+        Money first = new Money(500L, "EUR");
+        Money second = new Money(200L, "EUR");
+
+        Money result = first.subtract(second);
+
+        assertEquals(new Money(300L, "EUR"), result);
+    }
+
+    @Test
+    void addWithDifferentCurrencyThrows() {
+        Money euros = new Money(100L, "EUR");
+        Money dollars = new Money(100L, "USD");
+
+        assertThrows(IllegalArgumentException.class, () -> euros.add(dollars));
+    }
+
+    @Test
+    void currencyIsNormalizedToUpperCaseIsoCode() {
+        Money money = new Money(100L, " eur ");
+
+        assertEquals("EUR", money.currency());
+        assertEquals(new Money(100L, "EUR"), money);
+    }
+
+    @Test
+    void unknownCurrencyCodeThrows() {
+        assertThrows(IllegalArgumentException.class, () -> new Money(100L, "euro"));
+        assertThrows(IllegalArgumentException.class, () -> new Money(100L, "XYZ"));
+    }
+
+    @Test
+    void blankOrNullCurrencyThrows() {
+        assertThrows(IllegalArgumentException.class, () -> new Money(100L, " "));
+        assertThrows(IllegalArgumentException.class, () -> new Money(100L, null));
+    }
 }

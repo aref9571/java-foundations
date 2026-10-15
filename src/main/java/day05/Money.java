@@ -1,5 +1,7 @@
 package day05;
 
+import java.util.Currency;
+import java.util.Locale;
 import java.util.Objects;
 
 public final class Money {
@@ -8,9 +10,8 @@ public final class Money {
     private final String currency;
 
     public Money(long amountInCents, String currency) {
-        validateCurrency(currency);
         this.amountInCents = amountInCents;
-        this.currency = currency;
+        this.currency = normalizeCurrency(currency);
     }
 
     public long amountInCents() {
@@ -35,9 +36,15 @@ public final class Money {
         return new Money(resultAmount, this.currency);
     }
 
-    private static void validateCurrency(String currency) {
+    private static String normalizeCurrency(String currency) {
         if (currency == null || currency.isBlank()) {
             throw new IllegalArgumentException("currency must be non-blank");
+        }
+        String code = currency.trim().toUpperCase(Locale.ROOT);
+        try {
+            return Currency.getInstance(code).getCurrencyCode();
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("currency must be an ISO 4217 code: " + currency, exception);
         }
     }
 
