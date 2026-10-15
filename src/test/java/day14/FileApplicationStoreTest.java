@@ -63,5 +63,24 @@ class FileApplicationStoreTest {
         assertTrue(Files.exists(file));
     }
 
+    @Test
+    void loadAll_skipsBlankLines() throws Exception {
+        JobApplication application = JobApplicationBuilder.aDefaultApplication().build();
+        Path file = tempDir.resolve("applications-with-blank-lines.txt");
+        Files.writeString(file, "\n" + JobApplicationCsvConverter.toLine(application) + "\n   \n\n");
+        FileApplicationStore store = new FileApplicationStore(file);
 
+        List<JobApplication> loaded = store.loadAll();
+
+        assertEquals(List.of(application), loaded);
+    }
+
+    @Test
+    void loadAll_throwsForMalformedLine() throws Exception {
+        Path file = tempDir.resolve("applications-malformed.txt");
+        Files.writeString(file, "not|a|valid|line\n");
+        FileApplicationStore store = new FileApplicationStore(file);
+
+        assertThrows(IllegalArgumentException.class, store::loadAll);
+    }
 }

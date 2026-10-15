@@ -56,7 +56,7 @@ public class FileApplicationStore {
             System.out.println("[INFO] [FileApplicationStore] Read lines from file | " +
                     "file=" + file +
                     ", lineCount=" + lines.size());
-            return lines.stream().map(line -> {
+            return lines.stream().filter(line -> !line.isBlank()).map(line -> {
                 try {
                     return JobApplicationCsvConverter.fromLine(line);
                 }
