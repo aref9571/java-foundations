@@ -29,7 +29,7 @@ public class ApplicationStreamQueries {
         Objects.requireNonNull(applications, "applications must not be null");
         return applications.stream().filter(Objects::nonNull)
                 .map(JobApplication::company).filter(Objects::nonNull).
-                filter(company ->!company.isBlank()).map(String::toUpperCase)
+                filter(company ->!company.isBlank()).map(company -> company.toUpperCase(Locale.ROOT))
                 .distinct().sorted().toList();
     }
 

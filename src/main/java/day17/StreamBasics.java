@@ -1,6 +1,7 @@
 package day17;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class StreamBasics {
@@ -12,7 +13,7 @@ public class StreamBasics {
 
     public static List<String> uppercaseNonBlank(List<String> input){
         Objects.requireNonNull(input , "input must not be null");
-        return input.stream().filter(Objects::nonNull).filter(s -> !s.isBlank()).map(String::toUpperCase).toList();
+        return input.stream().filter(Objects::nonNull).filter(s -> !s.isBlank()).map(s -> s.toUpperCase(Locale.ROOT)).toList();
 
     }
 
