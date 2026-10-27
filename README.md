@@ -49,14 +49,14 @@ The code is plain Java 21 with no frameworks. Each day lives in its own `dayXX` 
 ### Requirements
 
 - JDK 21
-- Maven 3.9 or newer
+- No separate Maven installation; the Maven Wrapper (`./mvnw`, or `mvnw.cmd` on Windows) downloads Maven 3.9.11
 
 ### Build and run the tests
 
 From the project root:
 
 ```bash
-mvn --batch-mode verify
+./mvnw --batch-mode verify
 ```
 
 This compiles the code and runs all 302 tests. GitHub Actions runs the same command on every push.
@@ -66,7 +66,7 @@ This compiles the code and runs all 302 tests. GitHub Actions runs the same comm
 Compile once, then run any class that has a `main` method:
 
 ```bash
-mvn --batch-mode compile
+./mvnw --batch-mode compile
 java -cp target/classes day16.JobTrackerCli
 ```
 
